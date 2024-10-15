@@ -3,7 +3,7 @@ import $ivy.`com.lihaoyi::mill-contrib-playlib:`,  mill.playlib._
 
 object snakesandladdersweb extends PlayModule with SingleModule {
 
-  def scalaVersion = "3.3.1"
+  def scalaVersion = "2.13.15"
   def playVersion = "3.0.5"
   def twirlVersion = "2.0.1"
 
