@@ -4,7 +4,6 @@ import javax.inject._
 import play.api._
 import play.api.mvc._
 
-import snakes.controller.ControllerInterface
 import snakes.SnakesAndLadders
 
 /**
@@ -13,6 +12,8 @@ import snakes.SnakesAndLadders
  */
 @Singleton
 class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+
+  val controller = SnakesAndLadders.controller;
 
   /**
    * Create an Action to render an HTML page.
@@ -24,6 +25,7 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   
   
   def index() = Action { implicit request: Request[AnyContent] =>
+    print(controller.createGame(10))
     Ok(views.html.index())
   }
 }
