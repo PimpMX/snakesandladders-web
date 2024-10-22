@@ -1,0 +1,14 @@
+@(startNum: Int, rowSize: Int, reverse: Boolean, gameState: snakes.model.gameComponent.GameInterface)
+<div class="d-flex">
+    @if(!reverse) {
+        @for(i <- 0 until rowSize) {
+            <div>@field(startNum + i, gameState)</div>
+        }
+    } else {
+        @for(i <- (rowSize - 1) to 0 by -1) {
+            <div>@field(startNum + i, gameState)</div>
+        }
+    }
+</div>
+
+

@@ -1,0 +1,11 @@
+@(gameState: snakes.model.gameComponent.GameInterface)
+
+@import scala.math._
+@columns = @{ceil(sqrt(gameState.getBoard.getSize.toDouble)).toInt}
+@rows = @{ceil(gameState.getBoard.getSize.toDouble / columns).toInt}
+
+<div class="d-flex flex-column gamefield">
+    @for(i <- (columns - 1) to 0 by -1) {
+        <div>@fieldrow(i * rows, rows, i % 2 == 1, gameState)</div>
+    }
+</div>

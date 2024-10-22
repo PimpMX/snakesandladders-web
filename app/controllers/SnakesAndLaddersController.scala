@@ -74,8 +74,6 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   }
 
   def gameBoard() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.game(controller.toString()))
+    Ok(views.html.game.game(controller.getCurrentGameState))
   }
-
-
 }

@@ -1,14 +1,20 @@
-@(gameState: String)
+@(gameState: snakes.model.gameComponent.GameInterface)
 
 @main("Snakes and Ladders Game") {
-    <h1>Snakes and Ladders</h1>
 
+    <div class="h-100 w-100 p-5">
+        <h1 class="text-center mb-3">Snakes and Ladders</h1>
+        <div class="d-flex justify-content-center mb-2">@gamefield(gameState)</div>
+        <div class="d-flex justify-content-center">@controls()</div>
+    </div>
+
+    @*
     <h2>Current Game Status</h2>
     <pre>@gameState</pre> <!-- Display the game state text in a preformatted block -->
 
     <h2>Recommended Board Sizes</h2>
     <form action="@routes.SnakesAndLaddersController.createGame(8)" method="get">
-        <button type="submit">8x8</button>
+        <button class="btn btn-primary" type="submit">8x8</button>
     </form>
     <form action="@routes.SnakesAndLaddersController.createGame(10)" method="get">
         <button type="submit">10x10</button>
@@ -32,4 +38,5 @@
     <form action="@routes.SnakesAndLaddersController.undoLastStep()" method="get">
         <button type="submit">Undo Last Move</button>
     </form>
+    *@
 }

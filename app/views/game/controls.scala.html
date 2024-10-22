@@ -1,0 +1,12 @@
+@()
+<div class="d-flex">
+    <form action="@routes.SnakesAndLaddersController.startGame()" method="get">
+        <button class="btn btn-primary me-2" type="submit">Start Game</button>
+    </form>
+    <form action="@routes.SnakesAndLaddersController.rollDice()" method="get">
+        <button class="btn btn-success me-2" type="submit">Roll Dice</button>
+    </form>
+    <form action="@routes.SnakesAndLaddersController.undoLastStep()" method="get">
+        <button class="btn btn-secondary" type="submit">Undo Last Move</button>
+    </form>
+</div>

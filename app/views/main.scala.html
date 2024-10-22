@@ -7,15 +7,20 @@
 @(title: String)(content: Html)
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100 w-100">
     <head>
         @* Here's where we render the page title `String`. *@
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/main.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
-
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/bootstrap.min.css")">
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/game/fieldrow.css")">
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/game/controls.css")">
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/game/field.css")">
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/game/game.css")">
+        <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/game/gamefield.css")">
     </head>
-    <body>
+    <body class="h-100 w-100">
         @* And here's where we render the `Html` object containing
         * the page content. *@
         @content

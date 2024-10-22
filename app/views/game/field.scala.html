@@ -1,0 +1,16 @@
+@(fieldNumber: Int, gameState: snakes.model.gameComponent.GameInterface)
+@className = @{s"d-flex align-items-center justify-content-center ${if (fieldNumber % 2 == 0) "green-field" else "blue-field"}"}
+
+<div class="@className">
+    <p class="position-relative m-0 p-0">@{fieldNumber}</p>
+    <div class="d-flex flex-wrap">
+        @for(player <- gameState.getPlayers) {
+            @if(player.getPosition - 1 == fieldNumber) {
+                <div class="player-dot" style="z-index: 1; background: @{s"rgb(${player.getColor.getRed}," +
+                        s"${player.getColor.getGreen}," + s"${player.getColor.getBlue});"}"></div>
+            }
+        }
+    </div>
+</div>
+
+
