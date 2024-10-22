@@ -1,5 +1,13 @@
 @()
 
-@main("Welcome to Snakes and Ladders") {
-  <h1>Welcome to Snakes and Ladders!</h1>
+@main("Snakes and Ladders") {
+    <h1>Game Rules of Snakes and Ladders</h1>
+    <p>
+        The game of Snakes and Ladders is played between two or more players on a board having numbered squares.
+        The objective is to navigate the player's token from start to finish by rolling dice.
+    </p>
+    <p>
+        If you land on a ladder, you move up to a higher number. If you land on a snake, you slide down to a lower number.
+    </p>
+    <h3>Click <a style="color: #1ba316 " href="@routes.SnakesAndLaddersController.gameBoard()">here</a> to go to the game.</a> </h3>
 }

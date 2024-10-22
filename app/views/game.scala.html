@@ -1,0 +1,35 @@
+@(gameState: String)
+
+@main("Snakes and Ladders Game") {
+    <h1>Snakes and Ladders</h1>
+
+    <h2>Current Game Status</h2>
+    <pre>@gameState</pre> <!-- Display the game state text in a preformatted block -->
+
+    <h2>Recommended Board Sizes</h2>
+    <form action="@routes.SnakesAndLaddersController.createGame(8)" method="get">
+        <button type="submit">8x8</button>
+    </form>
+    <form action="@routes.SnakesAndLaddersController.createGame(10)" method="get">
+        <button type="submit">10x10</button>
+    </form>
+    <form action="@routes.SnakesAndLaddersController.createGame(12)" method="get">
+        <button type="submit">12x12</button>
+    </form>
+
+    <h2>Add Player</h2>
+    <form id="addPlayerForm" action="@routes.SnakesAndLaddersController.addPlayer(name = "Unknown Player")" method="get">
+        <button type="submit">Add Player</button>
+    </form>
+
+    <h2>Game Controls</h2>
+    <form action="@routes.SnakesAndLaddersController.startGame()" method="get">
+        <button type="submit">Start Game</button>
+    </form>
+    <form action="@routes.SnakesAndLaddersController.rollDice()" method="get">
+        <button type="submit">Roll Dice</button>
+    </form>
+    <form action="@routes.SnakesAndLaddersController.undoLastStep()" method="get">
+        <button type="submit">Undo Last Move</button>
+    </form>
+}

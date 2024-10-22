@@ -23,14 +23,16 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
    * a path of `/`.
    */
 
-  def createGame(playerCount: Int) = Action { implicit request: Request[AnyContent] =>
-    controller.createGame(playerCount)
+  def createGame(size: Int) = Action { implicit request: Request[AnyContent] =>
+    controller.createGame(size)
     Ok(controller.toString())
+    Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
   def saveGame() = Action { implicit request: Request[AnyContent] =>
     controller.saveGame()
     Ok(controller.toString())
+
   }
 
   def loadGame() = Action { implicit request: Request[AnyContent] =>
@@ -41,6 +43,7 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   def startGame() = Action { implicit request: Request[AnyContent] =>
     controller.startGame()
     Ok(controller.toString())
+    Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
   def restartGame() = Action { implicit request: Request[AnyContent] =>
@@ -51,19 +54,28 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   def addPlayer(name: String) = Action { implicit request: Request[AnyContent] =>
     controller.addPlayer(name)
     Ok(controller.toString())
+    Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
   def rollDice() = Action { implicit request: Request[AnyContent] =>
     controller.rollDice()
     Ok(controller.toString())
+    Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
   def undoLastStep() = Action { implicit request: Request[AnyContent] =>
     controller.undoLastAction()
     Ok(controller.toString())
+    Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
   def index() = Action { implicit request: Request[AnyContent] =>
     Ok(views.html.index())
   }
+
+  def gameBoard() = Action { implicit request: Request[AnyContent] =>
+    Ok(views.html.game(controller.toString()))
+  }
+
+
 }
