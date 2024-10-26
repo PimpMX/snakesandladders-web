@@ -10,7 +10,7 @@ GET     /save                       controllers.SnakesAndLaddersController.saveG
 GET     /load                       controllers.SnakesAndLaddersController.loadGame()
 GET     /start                      controllers.SnakesAndLaddersController.startGame()
 GET     /restart                    controllers.SnakesAndLaddersController.restartGame()
-GET     /add/:name                  controllers.SnakesAndLaddersController.addPlayer(name: String)
+GET     /add                       controllers.SnakesAndLaddersController.addPlayer()
 GET     /roll                       controllers.SnakesAndLaddersController.rollDice()
 GET     /undo                       controllers.SnakesAndLaddersController.undoLastStep()
 GET     /game                     controllers.SnakesAndLaddersController.gameBoard()

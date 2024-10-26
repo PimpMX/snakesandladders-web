@@ -1,13 +1,48 @@
 @()
 
 @main("Snakes and Ladders") {
-    <h1>Game Rules of Snakes and Ladders</h1>
-    <p>
-        The game of Snakes and Ladders is played between two or more players on a board having numbered squares.
-        The objective is to navigate the player's token from start to finish by rolling dice.
-    </p>
-    <p>
-        If you land on a ladder, you move up to a higher number. If you land on a snake, you slide down to a lower number.
-    </p>
-    <h3>Click <a style="color: #1ba316 " href="@routes.SnakesAndLaddersController.gameBoard()">here</a> to go to the game.</a> </h3>
+    <div class="container">
+        <h1>Snakes and Ladders</h1>
+        <p>
+            The game of Snakes and Ladders is played between two or more players on a board with numbered squares.
+            The objective is to navigate your token from start to finish by rolling dice.
+        </p>
+        <p>
+            If you land on a ladder, you move up to a higher number. If you land on a snake, you slide down to a lower number.
+        </p>
+        <section class="recommended-sizes">
+            <h2>Recommended Board Sizes</h2>
+            <div class="button-group">
+                <form action="@routes.SnakesAndLaddersController.createGame(8)" method="get">
+                    <button type="submit">8x8</button>
+                </form>
+                <form action="@routes.SnakesAndLaddersController.createGame(10)" method="get">
+                    <button type="submit">10x10</button>
+                </form>
+                <form action="@routes.SnakesAndLaddersController.createGame(12)" method="get">
+                    <button type="submit">12x12</button>
+                </form>
+            </div>
+        </section>
+
+
+
+        <!-- Add Player Section -->
+        <section>
+            <h2>Add Players</h2>
+            <form id="addPlayerForm" action="@routes.SnakesAndLaddersController.addPlayer()" method="get">
+                <input type="text" name="name" id="playerName" placeholder="Player Name" required />
+                <br><br>
+                <button type="submit">Add Player</button>
+            </form>
+        </section>
+
+            <!-- Start Game Section -->
+        <section>
+            <form action="@routes.SnakesAndLaddersController.startGame()" method="get">
+                <button type="submit" class="start-button">Start</button>
+            </form>
+        </section>
+
+    </div>
 }

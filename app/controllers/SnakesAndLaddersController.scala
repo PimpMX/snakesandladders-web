@@ -3,6 +3,8 @@ package controllers
 import javax.inject._
 import play.api._
 import play.api.mvc._
+import scala.math._
+
 
 import snakes.SnakesAndLadders
 
@@ -25,8 +27,9 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
 
   def createGame(size: Int) = Action { implicit request: Request[AnyContent] =>
     controller.createGame(size)
+    val gameSize = size
     Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.gameBoard())
+    Redirect(routes.SnakesAndLaddersController.index())
   }
 
   def saveGame() = Action { implicit request: Request[AnyContent] =>
@@ -49,17 +52,18 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   def restartGame() = Action { implicit request: Request[AnyContent] =>
     controller.restartGame()
     Ok(controller.toString())
+    Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
-  def addPlayer(name: String) = Action { implicit request: Request[AnyContent] =>
-    controller.addPlayer(name)
-    Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.gameBoard())
+  def addPlayer() = Action { implicit request: Request[AnyContent] =>
+    val playerName = request.getQueryString("name").getOrElse("Unknown Player")
+    controller.addPlayer(playerName)
+    Redirect(routes.SnakesAndLaddersController.index())
   }
 
   def rollDice() = Action { implicit request: Request[AnyContent] =>
     controller.rollDice()
-    Ok(controller.toString())
+      Ok(controller.toString())
     Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
@@ -74,8 +78,13 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   }
 
   def gameBoard() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.game(controller.toString()))
+    val players = controller.getCurrentGameState.getPlayers.toList // Convert Queue to List
+    val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
+    val boardSize = sqrt(controller.getBoardSize).toInt
+    val rolledValue = controller.getCurrentGameState.getCurrentPlayer().getLastRoll
+    Ok(views.html.game(boardSize, players, currentPlayer.getName, rolledValue))
   }
+
 
 
 }
