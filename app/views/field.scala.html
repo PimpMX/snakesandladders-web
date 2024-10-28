@@ -1,0 +1,14 @@
+@(fieldNumber: Int, players: List[snakes.model.playerComponent.PlayerInterface], currentPlayerName: String)
+
+<div class="board-cell" style="background-color: @{if(fieldNumber % 2 == 0) "green" else "lightblue"}">
+    @if(players.exists(p => p.getPosition == fieldNumber)) {
+      <div class="player-circle"
+        style="background-color: @{
+            val playersOnField = players.find(p => p.getPosition == fieldNumber)
+            val pc = playersOnField.get.getColor
+            s"rgb(${pc.getRed}, ${pc.getGreen}, ${pc.getBlue})"
+        }"></div>
+    } else {
+        @fieldNumber
+    }
+</div>

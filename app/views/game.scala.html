@@ -2,56 +2,52 @@
 
 @main("Snakes and Ladders - Game") {
 
-    <div class="board-container">
-            <!-- Generate the board dynamically -->
-        @for(row <- (0 until boardSize).reverse) {  <!-- Start from the bottom row -->
-        <div class="board-row">
-        @for(col <- 0 until boardSize) {
-            @* Calculate the cell number directly *@
-            <div class="board-cell">
-            @{
-                if (row % 2 == 0) { // Left to right on even rows
-                    val cellNumber = row * boardSize + (col + 1)
-                    cellNumber
-                } else { // Right to left on odd rows
-                    val cellNumber = row * boardSize + (boardSize - col)
-                    cellNumber
-                }
-            }
+    <div style="display: flex; align-items: center;">
+
+        <div class="board-container" style="justify-content: center;">
+
+            <div class="controls" style="margin-bottom: 20px;">
+                <form action="@routes.SnakesAndLaddersController.undoLastStep()" method="get">
+                    <button type="submit">Undo</button>
+                </form>
+                <form action="@routes.SnakesAndLaddersController.restartGame()" method="get">
+                    <button type="submit">Restart</button>
+                </form>
             </div>
-        }
+
+            <!-- Generate the board dynamically -->
+            @for(row <- (0 until boardSize).reverse) {  <!-- Start from the bottom row -->
+                <div class="board-row">
+                    @for(col <- 0 until boardSize) {
+                        @field(if (row % 2 == 0) { // Left to right on even rows
+                            row * boardSize + (col + 1)
+                        } else {
+                            row * boardSize + (boardSize - col)
+                        }, players, currentPlayerName)
+                    }
+                </div>
+            }
+
+            <div class="controls" style="align-content: center; display: flex; align-items: center;">
+                <form action="@routes.SnakesAndLaddersController.rollDice()" method="get">
+                    <button type="submit">Roll Dice</button>
+                </form>
+                    <!-- Display the rolled result -->
+                <p style="margin: 0">Rolled: @rolledValue</p>
+            </div>
         </div>
-    }
-    </div>
 
         <!-- Player List -->
-    <div class="player-list">
-        <h2>Player List</h2>
-        <ul>
-        @for(player <- players) {
-            <li style="color: @player.getColor.toString">
-                @player.getName (Position: @player.getPosition)
-            </li>
-        }
-        </ul>
-        <h3>Current Player: @currentPlayerName</h3>
+        <div class="player-list">
+            <h2>Player List</h2>
+            <ul>
+                @for(player <- players) {
+                    <li style="color: @player.getColor.toString">
+                        @player.getName (Position: @player.getPosition)
+                    </li>
+                }
+            </ul>
+            <h3>Current Player: @currentPlayerName</h3>
+        </div>
     </div>
-
-        <!-- Buttons positioned below the board -->
-    <div class="controls">
-        <form action="@routes.SnakesAndLaddersController.rollDice()" method="get">
-            <button type="submit">Roll Dice</button>
-        </form>
-            <!-- Display the rolled result -->
-        <p>Rolled: @rolledValue</p>
-    </div>
-    <div class="controls">
-        <form action="@routes.SnakesAndLaddersController.undoLastStep()" method="get">
-            <button type="submit">Undo</button>
-        </form>
-        <form action="@routes.SnakesAndLaddersController.restartGame()" method="get">
-            <button type="submit">Restart</button>
-        </form>
-    </div>
-
 }
