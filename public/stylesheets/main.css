@@ -10,7 +10,7 @@ body {
     font-family: Arial, sans-serif;
 }
 
-h1{
+h1 {
     font-size: 48px;
 }
 
@@ -35,17 +35,6 @@ section h2 {
     border-radius: 0px;
     width: 300px;
     margin: 0 auto 10px;
-}
-
-/* Text input styling */
-input[type="text"] {
-    height: 20px;
-    width: 250px;
-    padding: 5px;
-    font-size: 14px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    margin-top: 10px;
 }
 
 /* Style for the section */
@@ -104,13 +93,6 @@ section.recommended-sizes {
     font-weight: bold;
 }
 
-.player-circle {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    position: absolute;
-}
-
 /* Controls section for buttons */
 .controls {
     display: flex;
@@ -136,12 +118,6 @@ section.recommended-sizes {
     background-color: #87ceeb;
 }
 
-.board-cell {
-    position: relative;
-    width: 5vw;
-    height: 5vw;
-}
-
 .player-list {
     width: 300px;
     margin-top: 20px;
@@ -163,23 +139,57 @@ section.recommended-sizes {
     color: #FFD700;
 }
 
+.board-cell {
+    position: relative;
+}
+
+.player-circle {
+    border-radius: 50%;
+    position: absolute;
+}
+
 /* Für Handys */
 
-@media (max-width: 819px) {
+@media (max-width: 650px) {
+
     .board-cell {
-        position: relative;
         width: 10vw;
         height: 10vw;
+    }
+
+    .player-circle {
+        width: 4.5vw;
+        height: 4.5vw;
     }
 }
 
 /* Für Tablets */
 
-@media (min-width: 820px) and (max-width: 1200px) {
+@media (min-width: 651px) and (max-width: 1000px) {
+
     .board-cell {
-        position: relative;
         width: 7.5vw;
         height: 7.5vw;
+    }
+
+    .player-circle {
+        width: 3vw;
+        height: 3vw;
+    }
+}
+
+/* Ab Desktop Größe */
+
+@media (min-width: 1001px) {
+
+    .board-cell {
+        width: 4vw;
+        height: 4vw;
+    }
+
+    .player-circle {
+        width: 1.5vw;
+        height: 1.5vw;
     }
 }
 

@@ -11,8 +11,8 @@
             If you land on a ladder, you move up to a higher number. If you land on a snake, you slide down to a lower number.
         </p>
         <section class="recommended-sizes">
-            <h2>Recommended Board Sizes</h2>
-            <div class="button-group">
+            <h2 class="col-md-5">Recommended Board Sizes</h2>
+            <div class="button-group mt-3">
                 <form action="@routes.SnakesAndLaddersController.createGame(8)" method="get">
                     <button class="btn btn-success" type="submit">8x8</button>
                 </form>
@@ -27,18 +27,17 @@
 
         <!-- Add Player Section -->
         <section>
-            <h2>Add Players</h2>
-            <form id="addPlayerForm" action="@routes.SnakesAndLaddersController.addPlayer()" method="get">
-                <input type="text" name="name" id="playerName" placeholder="Player Name" required />
-                <br><br>
-                <button class="btn btn-primary" type="submit">Add Player</button>
+            <h2 class="col-md-5">Add Players</h2>
+            <form class="input-group justify-content-center mt-3" id="addPlayerForm" action="@routes.SnakesAndLaddersController.addPlayer()" method="get">
+                <input class="input-group-text col-md-3" type="text" name="name" id="playerName" placeholder="Player Name" required />
+                <button class="btn btn-success" type="submit">Add</button>
             </form>
         </section>
 
         <!-- Start Game Section -->
         <section>
             <form action="@routes.SnakesAndLaddersController.startGame()" method="get">
-                <button class="btn btn-primary" type="submit">Start</button>
+                <button class="btn btn-primary col-md-2" type="submit">Start</button>
             </form>
         </section>
 
