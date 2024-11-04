@@ -2,16 +2,16 @@
 
 @main("Snakes and Ladders - Game") {
 
-    <div style="display: flex; align-items: center;">
+    <div class="d-flex align-items-center">
 
-        <div class="board-container" style="justify-content: center;">
+        <div class="board-container justify-content-center">
 
-            <div class="controls" style="margin-bottom: 20px;">
+            <div class="controls mb-2">
                 <form action="@routes.SnakesAndLaddersController.undoLastStep()" method="get">
-                    <button type="submit">Undo</button>
+                    <button class="btn btn-secondary" type="submit">Undo</button>
                 </form>
                 <form action="@routes.SnakesAndLaddersController.restartGame()" method="get">
-                    <button type="submit">Restart</button>
+                    <button class="btn btn-secondary" type="submit">Restart</button>
                 </form>
             </div>
 
@@ -28,9 +28,9 @@
                 </div>
             }
 
-            <div class="controls" style="align-content: center; display: flex; align-items: center;">
+            <div class="controls d-flex justify-content-center align-items-center">
                 <form action="@routes.SnakesAndLaddersController.rollDice()" method="get">
-                    <button type="submit">Roll Dice</button>
+                    <button class="btn btn-primary" type="submit">Roll Dice</button>
                 </form>
                     <!-- Display the rolled result -->
                 <p style="margin: 0">Rolled: @rolledValue</p>
@@ -47,7 +47,8 @@
                     </li>
                 }
             </ul>
-            <h3>Current Player: @currentPlayerName</h3>
+            <h3>Current Player:</h3>
+            <h3>@currentPlayerName</h3>
         </div>
     </div>
 }

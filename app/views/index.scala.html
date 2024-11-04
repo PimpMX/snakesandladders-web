@@ -14,13 +14,13 @@
             <h2>Recommended Board Sizes</h2>
             <div class="button-group">
                 <form action="@routes.SnakesAndLaddersController.createGame(8)" method="get">
-                    <button type="submit">8x8</button>
+                    <button class="btn btn-success" type="submit">8x8</button>
                 </form>
                 <form action="@routes.SnakesAndLaddersController.createGame(10)" method="get">
-                    <button type="submit">10x10</button>
+                    <button class="btn btn-success" type="submit">10x10</button>
                 </form>
                 <form action="@routes.SnakesAndLaddersController.createGame(12)" method="get">
-                    <button type="submit">12x12</button>
+                    <button class="btn btn-success" type="submit">12x12</button>
                 </form>
             </div>
         </section>
@@ -31,14 +31,14 @@
             <form id="addPlayerForm" action="@routes.SnakesAndLaddersController.addPlayer()" method="get">
                 <input type="text" name="name" id="playerName" placeholder="Player Name" required />
                 <br><br>
-                <button type="submit">Add Player</button>
+                <button class="btn btn-primary" type="submit">Add Player</button>
             </form>
         </section>
 
         <!-- Start Game Section -->
         <section>
             <form action="@routes.SnakesAndLaddersController.startGame()" method="get">
-                <button type="submit" class="start-button">Start</button>
+                <button class="btn btn-primary" type="submit">Start</button>
             </form>
         </section>
 

@@ -5,8 +5,8 @@ body {
     align-items: center;
     min-height: 100vh;
     margin: 0;
-    background-color: #0e5932;
-    color: white;
+    background-color: #0e5932 !important;
+    color: white !important;
     font-family: Arial, sans-serif;
 }
 
@@ -35,23 +35,6 @@ section h2 {
     border-radius: 0px;
     width: 300px;
     margin: 0 auto 10px;
-}
-
-/* Buttons styling */
-button {
-    background-color: #add8e6;
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-    margin-top: 10px;
-}
-
-button:hover {
-    background-color: #87ceeb; /* Slightly darker light blue on hover */
 }
 
 /* Text input styling */
@@ -155,8 +138,8 @@ section.recommended-sizes {
 
 .board-cell {
     position: relative;
-    width: 50px;
-    height: 50px;
+    width: 5vw;
+    height: 5vw;
 }
 
 .player-list {
@@ -179,3 +162,24 @@ section.recommended-sizes {
     font-weight: bold;
     color: #FFD700;
 }
+
+/* Für Handys */
+
+@media (max-width: 819px) {
+    .board-cell {
+        position: relative;
+        width: 10vw;
+        height: 10vw;
+    }
+}
+
+/* Für Tablets */
+
+@media (min-width: 820px) and (max-width: 1200px) {
+    .board-cell {
+        position: relative;
+        width: 7.5vw;
+        height: 7.5vw;
+    }
+}
+
