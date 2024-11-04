@@ -14,6 +14,16 @@
                     <button class="btn btn-secondary" type="submit">Restart</button>
                 </form>
             </div>
+                <!-- Player List -->
+            <div class="controls d-flex justify-content-center align-items-center">
+                <ul class="list-group list-group-horizontal">
+                    @for(player <- players) {
+                        <li class="list-group-item" style="color: @player.getColor.toString">
+                            @player.getName (@player.getPosition)
+                        </li>
+                    }
+                </ul>
+            </div>
 
             <!-- Generate the board dynamically -->
             @for(row <- (0 until boardSize).reverse) {  <!-- Start from the bottom row -->
@@ -35,20 +45,6 @@
                     <!-- Display the rolled result -->
                 <p style="margin: 0">Rolled: @rolledValue</p>
             </div>
-        </div>
-
-        <!-- Player List -->
-        <div class="player-list">
-            <h2>Player List</h2>
-            <ul>
-                @for(player <- players) {
-                    <li style="color: @player.getColor.toString">
-                        @player.getName (Position: @player.getPosition)
-                    </li>
-                }
-            </ul>
-            <h3>Current Player:</h3>
-            <h3>@currentPlayerName</h3>
         </div>
     </div>
 }
