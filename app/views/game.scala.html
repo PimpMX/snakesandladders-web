@@ -5,16 +5,11 @@
     <div class="d-flex align-items-center">
 
         <div class="board-container justify-content-center">
-
             <div class="controls mb-2">
-                <form action="@routes.SnakesAndLaddersController.undoLastStep()" method="get">
-                    <button class="btn btn-secondary" type="submit">Undo</button>
-                </form>
-                <form action="@routes.SnakesAndLaddersController.restartGame()" method="get">
-                    <button class="btn btn-secondary" type="submit">Restart</button>
-                </form>
+                <button class="btn btn-secondary" onclick="undoLastStep()">Undo</button>
+                <button class="btn btn-secondary" onclick="restart()">Restart</button>
             </div>
-                <!-- Player List -->
+            <!-- Player List -->
             <div class="controls d-flex justify-content-center align-items-center">
                 <ul class="list-group list-group-horizontal">
                     @for(player <- players) {
@@ -39,9 +34,7 @@
             }
 
             <div class="controls d-flex justify-content-center align-items-center">
-                <form action="@routes.SnakesAndLaddersController.rollDice()" method="get">
-                    <button class="btn btn-primary" type="submit">Roll Dice</button>
-                </form>
+                <button class="btn btn-primary" onclick="rollDice()">Roll Dice</button>
                     <!-- Display the rolled result -->
                 <p style="margin: 0">Rolled: @rolledValue</p>
             </div>

@@ -35,7 +35,6 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   def saveGame() = Action { implicit request: Request[AnyContent] =>
     controller.saveGame()
     Ok(controller.toString())
-
   }
 
   def loadGame() = Action { implicit request: Request[AnyContent] =>
@@ -55,15 +54,14 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
     Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
-  def addPlayer() = Action { implicit request: Request[AnyContent] =>
-    val playerName = request.getQueryString("name").getOrElse("Unknown Player")
+  def addPlayer(playerName: String) = Action { implicit request: Request[AnyContent] =>
     controller.addPlayer(playerName)
     Redirect(routes.SnakesAndLaddersController.index())
   }
 
   def rollDice() = Action { implicit request: Request[AnyContent] =>
     controller.rollDice()
-      Ok(controller.toString())
+    Ok(controller.toString())
     Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
@@ -84,7 +82,4 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
     val rolledValue = controller.getCurrentGameState.getCurrentPlayer().getLastRoll
     Ok(views.html.game(boardSize, players, currentPlayer.getName, rolledValue))
   }
-
-
-
 }
