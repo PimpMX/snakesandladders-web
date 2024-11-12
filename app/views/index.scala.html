@@ -13,9 +13,9 @@
         <section class="recommended-sizes">
             <h2 class="col-md-5">Recommended Board Sizes</h2>
             <div class="button-group mt-3">
-                <button class="btn btn-success" onclick="createGame(8)">8x8</button>
-                <button class="btn btn-success" onclick="createGame(10)">10x10</button>
-                <button class="btn btn-success" onclick="createGame(12)">12x12</button>
+                <button class="btn btn-success create-game" data-dimensions="8">8x8</button>
+                <button class="btn btn-success create-game" data-dimensions="10">10x10</button>
+                <button class="btn btn-success create-game" data-dimensions="12">12x12</button>
             </div>
         </section>
 
@@ -23,15 +23,15 @@
         <section>
             <h2 class="col-md-5">Add Players</h2>
             <div class="input-group justify-content-center mt-3">
-                <input class="input-group-text col-md-3" type="text" id="playerName"
-                    placeholder="Player Name" onkeydown="onInputFieldKeydown(event)" required />
-                <button class="btn btn-success" onclick="addPlayer()">Add</button>
+                <input  id="playerName" class="input-group-text col-md-3" type="text"
+                    placeholder="Player Name" required />
+                <button id="addPlayerButton" class="btn btn-success">Add</button>
             </div>
         </section>
 
         <!-- Start Game Section -->
         <section>
-            <button class="btn btn-primary col-md-2" onclick="start()">Start</button>
+            <button id="startGameButton" class="btn btn-primary col-md-2">Start</button>
         </section>
     </div>
 }

@@ -1,33 +1,41 @@
-function undoLastStep() {
-    window.location.href = "/undo";
-}
+$(document).ready(function() {
 
-function createGame(dimensions) {
-    window.location.href= `create/${dimensions}`;
-}
+    $('#undoButton').click(function() {
+        window.location.href = "/undo";
+    });
 
-function start() {
-    window.location.href = "/start";
-}
+    $('.create-game').click(function() {
+        var dimensions = $(this).data('dimensions');
+        window.location.href = `create/${dimensions}`;
+    });
 
-function restart() {
-    window.location.href = "/restart";
-}
+    $('#startGameButton').click(function() {
+        window.location.href = "/start";
+    });
 
-function rollDice() {
-    window.location.href = "/roll";
-}
+    $('#restartGameButton').click(function() {
+        window.location.href = "/restart";
+    });
 
-function onInputFieldKeydown(event) {
-    if(event.key === "Enter") {
+    $('#rollDiceButton').click(function() {
+        window.location.href = "/roll";
+    });
+
+    $('#playerName').keydown(function(event) {
+        if (event.key === "Enter") {
+            addPlayer();
+        }
+    });
+
+    $('#addPlayerButton').click(function() {
         addPlayer();
-    }
-}
+    });
 
 function addPlayer() {
-    const nameInputField = document.getElementById("playerName");
-    const playerName = nameInputField.value;
+    var playerName = $('#playerName').val();
     window.location.href = `/add/${playerName}`;
 }
+
+});
 
 
