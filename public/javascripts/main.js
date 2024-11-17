@@ -1,7 +1,21 @@
 $(document).ready(function() {
 
     $('#undoButton').click(function() {
-        window.location.href = "/undo";
+        $.ajax({
+            url: "/undo",
+            method: "GET",
+            dataType: "json",
+            success: function(response) {
+                $('#board').html($(response.boardHtml).find('#board').html());
+                $('#playerList').html($(response.boardHtml).find('#playerList').html());
+                $('#rollResult').html($(response.boardHtml).find('#rollResult').html());
+
+                attachRollDiceListener();
+            },
+            error: function() {
+                alert("Error undoing the last step.");
+            }
+        });
     });
 
     function clearPlayerList() {
@@ -19,7 +33,6 @@ $(document).ready(function() {
             success: function(response) {
                 if (response.success) {
                     $('#gameCreationMessage').html('<div class="alert alert-success">' + response.message + '</div>');
-
                     clearPlayerList();
                 } else {
                     $('#gameCreationMessage').html('<div class="alert alert-danger">Game creation failed!</div>');
@@ -31,7 +44,6 @@ $(document).ready(function() {
         });
     });
 
-
     $('#startGameButton').click(function() {
         window.location.href = "/start";
     });
@@ -40,9 +52,27 @@ $(document).ready(function() {
         window.location.href = "/restart";
     });
 
-    $('#rollDiceButton').click(function() {
-        window.location.href = "/roll";
-    });
+    function attachRollDiceListener() {
+        $('#rollDiceButton').click(function() {
+            $.ajax({
+                url: "/roll",
+                method: "GET",
+                dataType: "json",
+                success: function(response) {
+                    $('#board').html($(response.boardHtml).find('#board').html());
+                    $('#playerList').html($(response.boardHtml).find('#playerList').html());
+                    $('#rollResult').html($(response.boardHtml).find('#rollResult').html());
+
+                    attachRollDiceListener();
+                },
+                error: function() {
+                    alert("Error rolling the dice.");
+                }
+            });
+        });
+    }
+
+    attachRollDiceListener();
 
     $('#playerName').keydown(function(event) {
         if (event.key === "Enter") {
@@ -62,7 +92,7 @@ $(document).ready(function() {
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    $('#playerName').val('');
+                    $('#playerName').val(''); // Clear the input field
 
                     var playerList = "";
                     data.players.forEach(function(player) {
@@ -79,6 +109,9 @@ $(document).ready(function() {
         }
     }
 
+    function updateGameBoard(boardHtml, playersListHtml, rolledValue) {
+        $('.board-container').html(boardHtml)
+        $('#playerList').html(playersListHtml);
+        $('#rolledValue').text('Rolled: ' + rolledValue);
+    }
 });
-
-

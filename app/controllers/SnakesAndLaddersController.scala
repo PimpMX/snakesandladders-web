@@ -53,7 +53,7 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
   def restartGame() = Action { implicit request: Request[AnyContent] =>
     controller.restartGame()
     Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.gameBoard())
+    Redirect(routes.SnakesAndLaddersController.index())
   }
 
   def addPlayer(playerName: String) = Action { implicit request: Request[AnyContent] =>
@@ -64,14 +64,34 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
 
   def rollDice() = Action { implicit request: Request[AnyContent] =>
     controller.rollDice()
-    Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.gameBoard())
+
+    val players = controller.getCurrentGameState.getPlayers.toList
+    val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
+    val boardSize = sqrt(controller.getBoardSize).toInt
+    val rolledValue = currentPlayer.getLastRoll
+
+    // Render
+    val boardHtml = views.html.game(boardSize, players, currentPlayer.getName, rolledValue).toString
+
+    Ok(Json.obj(
+      "boardHtml" -> boardHtml
+    ))
   }
 
   def undoLastStep() = Action { implicit request: Request[AnyContent] =>
     controller.undoLastAction()
-    Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.gameBoard())
+
+    val players = controller.getCurrentGameState.getPlayers.toList
+    val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
+    val boardSize = sqrt(controller.getBoardSize).toInt
+    val rolledValue = currentPlayer.getLastRoll
+
+    // Render
+    val boardHtml = views.html.game(boardSize, players, currentPlayer.getName, rolledValue).toString
+
+    Ok(Json.obj(
+      "boardHtml" -> boardHtml
+    ))
   }
 
   def index() = Action { implicit request: Request[AnyContent] =>
