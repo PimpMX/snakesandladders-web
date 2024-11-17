@@ -4,7 +4,7 @@ import javax.inject._
 import play.api._
 import play.api.mvc._
 import scala.math._
-
+import play.api.libs.json.Json
 
 import snakes.SnakesAndLadders
 
@@ -27,9 +27,11 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
 
   def createGame(size: Int) = Action { implicit request: Request[AnyContent] =>
     controller.createGame(size)
-    val gameSize = size
-    Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.index())
+    Ok(play.api.libs.json.Json.obj(
+      "success" -> true,
+      "gameSize" -> size,
+      "message" -> s"Game of size $size created"
+    ))
   }
 
   def saveGame() = Action { implicit request: Request[AnyContent] =>
@@ -56,7 +58,8 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
 
   def addPlayer(playerName: String) = Action { implicit request: Request[AnyContent] =>
     controller.addPlayer(playerName)
-    Redirect(routes.SnakesAndLaddersController.index())
+    val players = controller.getCurrentGameState.getPlayers.map(_.getName).toList
+    Ok(Json.obj("players" -> players))
   }
 
   def rollDice() = Action { implicit request: Request[AnyContent] =>
