@@ -1,4 +1,4 @@
-@()
+@(players: List[snakes.model.playerComponent.PlayerInterface])
 
 @main("Snakes and Ladders") {
     <div class="container">
@@ -30,9 +30,17 @@
             </div>
 
             <div class="controls d-flex justify-content-center align-items-center">
-                <ul id="playerList" class="list-group list-group-horizontal">
-                    <li id="noPlayersMessage" class="list-group-item">No players added yet</li>
-                </ul>
+                @if(players.length == 0) {
+                    <ul id="playerList" class="list-group list-group-horizontal">
+                        <li id="noPlayersMessage" class="list-group-item">No players added yet</li>
+                    </ul>
+                } else {
+                    <ul id="playerList" class="list-group list-group-horizontal">
+                        @for(player <- players) {
+                            <li class="list-group-item">@player.getName</li>
+                        }
+                    </ul>
+                }
             </div>
         </section>
 
