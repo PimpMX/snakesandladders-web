@@ -1,29 +1,26 @@
 package controllers
 
-import javax.inject._
-import play.api._
-import play.api.mvc._
-import scala.math._
+import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Props}
+import org.apache.pekko.stream.Materializer
+
+import javax.inject.*
+import play.api.*
+import play.api.mvc.*
+
+import scala.math.*
 import play.api.libs.json.Json
-
+import play.api.libs.streams.ActorFlow
 import snakes.SnakesAndLadders
+import snakes.util.Event.*
+import snakes.util.{Event, Observer}
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
+import scala.swing.Reactor
+
 @Singleton
-class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerComponents)
+  (implicit system: ActorSystem, mat: Materializer) extends BaseController {
 
   val controller = SnakesAndLadders.controller;
-
-  /**
-   * Create an Action to render an HTML page.
-   *
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
 
   def createGame(size: Int) = Action { implicit request: Request[AnyContent] =>
     controller.createGame(size)
@@ -34,25 +31,13 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
     ))
   }
 
-  def saveGame() = Action { implicit request: Request[AnyContent] =>
-    controller.saveGame()
-    Ok(controller.toString())
-  }
-
-  def loadGame() = Action { implicit request: Request[AnyContent] =>
-    controller.loadGame()
-    Ok(controller.toString())
-  }
-
   def startGame() = Action { implicit request: Request[AnyContent] =>
     controller.startGame()
-    Ok(controller.toString())
     Redirect(routes.SnakesAndLaddersController.gameBoard())
   }
 
   def restartGame() = Action { implicit request: Request[AnyContent] =>
     controller.restartGame()
-    Ok(controller.toString())
     Redirect(routes.SnakesAndLaddersController.index())
   }
 
@@ -105,4 +90,59 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
     val rolledValue = controller.getCurrentGameState.getCurrentPlayer().getLastRoll
     Ok(views.html.game(boardSize, players, currentPlayer.getName, rolledValue))
   }
+
+  def socket = WebSocket.accept[String, String] { request =>
+    ActorFlow.actorRef { out =>
+      println("Connect received")
+      SnakesAndLaddersSocketActorFactory.create(out)
+    }
+  }
+
+  object SnakesAndLaddersSocketActorFactory {
+    def create(out: ActorRef) = {
+      Props(new SnakesAndLaddersSocketActor(out))
+    }
+  }
+
+  class SnakesAndLaddersSocketActor(out: ActorRef) extends Actor with Reactor {
+    listenTo(controller)
+
+    def receive = {
+      case msg: String =>
+        println(s"Received message: $msg")
+    }
+
+    reactions += {
+      case Create =>
+        println("Reacting to Create event")
+        out ! "Create event triggered"
+      case AddPlayer =>
+        println("Reacting to AddPlayer event")
+        out ! "AddPlayer event triggered"
+      case Roll(rollResult) =>
+        println(s"Reacting to Roll event with result: $rollResult")
+        out ! s"Roll event triggered: $rollResult"
+      case Undo =>
+        println("Reacting to Undo event")
+        out ! "Undo event triggered"
+      case Start =>
+        println("Reacting to Start event")
+        out ! "Start event triggered"
+      case Load =>
+        println("Reacting to Load event")
+        out ! "Load event triggered"
+      case Save =>
+        println("Reacting to Save event")
+        out ! "Save event triggered"
+      case Update =>
+        println("Reacting to Update event")
+        out ! "Update event triggered"
+      case Restart =>
+        println("Reacting to Restart event")
+        out ! "Restart event triggered"
+    }
+  }
 }
+
+
+
