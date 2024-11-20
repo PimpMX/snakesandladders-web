@@ -1,5 +1,11 @@
 <script setup>
-
+export default {
+  name: 'GameChat',
+  props: {
+  },
+  methods: {
+  }
+}
 </script>
 
 <template>
