@@ -1,17 +1,18 @@
-<script setup>
+<script>
+import GameControls from "@/components/GameControls.vue";
+import GameField from "@/components/GameField.vue";
+
 export default {
   name: 'GamePage',
-  props: {
-  },
-  methods: {
-  }
+  props: {},
+  methods: {},
+  components: {GameField, GameControls}
 }
 </script>
 
 <template>
-  <div>
-
-  </div>
+  <GameControls />
+  <GameField />
 </template>
 
 <style scoped>

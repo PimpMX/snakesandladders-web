@@ -1,5 +1,6 @@
 <template>
   <IndexPage v-if="state && !state.gameIsRunning" :state="state"/>
+  <GamePage/>
 </template>
 
 <script>
@@ -7,10 +8,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {connectWebSocket} from "@/util/websocket";
 import {requests} from "@/util/requests";
 import IndexPage from "@/components/IndexPage.vue";
+import GamePage from "@/components/GamePage.vue"
 
 export default {
   name: 'App',
-  components: {IndexPage},
+  components: {IndexPage, GamePage},
   data() {
     return {
       state: null

@@ -15,6 +15,8 @@ export function connectWebSocket(onMessageCb) {
 
     websocket.onmessage = function (e) {
         const message = JSON.parse(e.data);
+        console.debug("Received Message");
+        console.debug(message);
         onMessageCb(message);
     };
 }
