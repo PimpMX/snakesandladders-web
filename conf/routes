@@ -4,15 +4,17 @@
 # ~~~~
 
 # An example controller showing a sample home page
-GET    /                           controllers.SnakesAndLaddersController.indexPage()
-GET    /game                       controllers.SnakesAndLaddersController.gamePage()
-GET    /websocket                  controllers.SnakesAndLaddersController.socket
-GET    /create/:size               controllers.SnakesAndLaddersController.createGame(size: Int)
-GET    /start                      controllers.SnakesAndLaddersController.startGame()
-GET    /restart                    controllers.SnakesAndLaddersController.restartGame()
-GET    /add/:playerName            controllers.SnakesAndLaddersController.addPlayer(playerName: String)
-GET    /roll                       controllers.SnakesAndLaddersController.rollDice()
-GET    /undo                       controllers.SnakesAndLaddersController.undoLastStep()
+
+GET    /api/state                      controllers.SnakesAndLaddersController.gameState
+GET    /api/websocket                  controllers.SnakesAndLaddersController.socket
+GET    /api/create/:size               controllers.SnakesAndLaddersController.createGame(size: Int)
+GET    /api/start                      controllers.SnakesAndLaddersController.startGame
+GET    /api/restart                    controllers.SnakesAndLaddersController.restartGame
+GET    /api/add/:playerName            controllers.SnakesAndLaddersController.addPlayer(playerName: String)
+GET    /api/roll                       controllers.SnakesAndLaddersController.rollDice
+GET    /api/undo                       controllers.SnakesAndLaddersController.undoLastStep
 
 # Map static resources from the /public folder to the /assets URL path
+
+GET    /                           controllers.Assets.at(path="/public", file="index.html")
 GET    /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
