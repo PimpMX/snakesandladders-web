@@ -4,6 +4,8 @@ export function fetchRequest(url, options = {}) {
             if (!response.ok) {
                 throw new Error(`Request failed with status ${response.status}`);
             }
+            if(response.status === 204)
+                return Promise.resolve();
             return response.json();
         })
         .catch(error => {
