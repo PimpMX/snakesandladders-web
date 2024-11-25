@@ -4,7 +4,9 @@ import GameField from "@/components/GameField.vue";
 
 export default {
   name: 'GamePage',
-  props: {},
+  props: {
+    state: Object
+  },
   methods: {},
   components: {GameField, GameControls}
 }
@@ -12,7 +14,7 @@ export default {
 
 <template>
   <GameControls />
-  <GameField />
+  <GameField :state="state" />
 </template>
 
 <style scoped>

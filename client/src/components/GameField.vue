@@ -4,6 +4,9 @@ import {ref, onMounted, onBeforeUnmount} from 'vue';
 
 export default {
   name: 'GameField',
+  props: {
+    state: Object
+  },
   setup() {
     const canvasContainer = ref(null);
     let p5Instance = null;

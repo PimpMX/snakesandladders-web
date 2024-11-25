@@ -1,6 +1,6 @@
 <template>
   <IndexPage v-if="state && !state.gameIsRunning" :state="state"/>
-  <GamePage/>
+  <GamePage v-if="state && state.gameIsRunning" :state="state"/>
 </template>
 
 <script>
