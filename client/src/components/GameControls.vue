@@ -10,6 +10,9 @@ export default {
     },
     undoMove() {
       requests.undo();
+    },
+    roll() {
+      requests.roll()
     }
   }
 }
@@ -19,6 +22,7 @@ export default {
   <div id="gameControls" class="controls mb-2">
     <button id="restartGameButton" class="btn btn-secondary" @click="exitGame()">Exit</button>
     <button id="undoButton" class="btn btn-secondary" @click="undoMove()">Undo</button>
+    <button id="rollButton" class="btn btn-secondary" @click="roll()">Roll</button>
   </div>
 </template>
 

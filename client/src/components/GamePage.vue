@@ -15,6 +15,7 @@ export default {
 <template>
   <GameControls />
   <GameField :state="state" />
+
 </template>
 
 <style scoped>

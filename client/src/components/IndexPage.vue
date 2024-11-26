@@ -6,6 +6,11 @@ export default {
   props: {
     state: Object
   },
+  data() {
+    return {
+      playerName: ""
+    }
+  },
   methods: {
     startGame() {
       requests.start();
@@ -15,6 +20,7 @@ export default {
     },
     addPlayer(playerName) {
       requests.addPlayer(playerName)
+      this.playerName = "";
     }
   }
 }
@@ -45,8 +51,9 @@ export default {
     <section>
       <h2 class="col-md-5">Add Players</h2>
       <div class="input-group justify-content-center mt-3">
-        <input id="playerName" class="input-group-text col-md-3" type="text" placeholder="Player Name" required/>
-        <button id="addPlayerButton" class="btn btn-success">Add</button>
+        <input id="playerName" v-model="playerName" class="input-group-text col-md-3"
+               @keydown.enter="addPlayer(playerName)" type="text" placeholder="Player Name" required/>
+        <button id="addPlayerButton" class="btn btn-success" @click="addPlayer(playerName)">Add</button>
       </div>
 
       <div class="controls d-flex justify-content-center align-items-center">
