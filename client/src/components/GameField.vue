@@ -7,7 +7,7 @@ export default {
   props: {
     state: Object
   },
-  setup() {
+  setup(props) {
     const canvasContainer = ref(null);
     let p5Instance = null;
     const updateCanvasSize = (canvasContainer, p) => {
@@ -24,7 +24,7 @@ export default {
         p.background(255);
       };
       p.draw = () => {
-        renderField(p);
+        render(p, props.state);
       };
       p.windowResized = () => {
         updateCanvasSize(canvasContainer, p);
@@ -46,13 +46,74 @@ export default {
   },
 };
 
-const renderField = (p) => {
-  if (p.mouseIsPressed) {
-    p.fill(50);
-    p.noStroke();
-    p.ellipse(p.mouseX, p.mouseY, 20, 20);
+function getFieldCoords(position, dim, sqSize, s) {
+  const row = Math.floor(position / dim);
+  let col = position;
+  while(col > dim)
+    col -= dim;
+  console.log(position, row, col);
+  if(row % 2 === 1)
+    col = dim - col;
+  return {
+    x: col * sqSize,
+    y: s - (row + 1) * sqSize
   }
 }
+
+const render = (p, state) => {
+
+  if(!state)
+    return;
+
+  p.clear();
+
+  const s = p.width;
+  const dim = Math.sqrt(state.board.dimensions);
+  const sqSize = s / dim;
+
+  for(let i = 0; i <= dim; i++) {
+    if(i % 2 === 0) {
+      for(let j = 0; j < dim; j++) {
+        const x = j * sqSize;
+        const y = s - i * sqSize;
+        const num = i * dim - j;
+        renderField(p, x, y, sqSize, num,
+            j % 2 === 1 ? 'lightblue' : 'green', state);
+      }
+    } else {
+      for(let j = dim; j > 0; j--) {
+        const x = s - j * sqSize;
+        const y = s - i * sqSize;
+        const num = i * dim - j + 1;
+        renderField(p, x, y, sqSize, num,
+            j % 2 === 0 ? 'lightblue' : 'green', state);
+      }
+    }
+  }
+
+  renderPlayers(p, state, dim, sqSize, s);
+}
+
+function renderField(p, x, y, size, fieldNum, bgColor) {
+  p.fill(bgColor);
+  p.square(x, y, size);
+
+  p.fill('black');
+  p.textSize(12);
+
+  let txt = `${fieldNum}`;
+  let txtWidth = p.textWidth(txt);
+  p.text(txt, x + (size - txtWidth) / 2, y + size * 0.6);
+}
+
+function renderPlayers(p, state, dim, sqSize, s) {
+  for(const player of state.players) {
+    const { x, y } = getFieldCoords(player.position, dim, sqSize, s);
+    p.fill(player.color);
+    p.circle(x + 0.5 * sqSize, y + 0.5 * sqSize, 0.5 * sqSize);
+  }
+}
+
 </script>
 
 <template>
@@ -63,6 +124,5 @@ const renderField = (p) => {
 .canvas-container {
   height: 35vw;
   width: 35vw;
-  border: 1px solid black;
 }
 </style>
