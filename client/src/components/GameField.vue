@@ -279,4 +279,8 @@ function renderLadders(p, state, dim, sqSize, s) {
   height: 35vw;
   width: 35vw;
 }
+
+.canvas-container >>> canvas {
+  outline: 2px solid black;
+}
 </style>
