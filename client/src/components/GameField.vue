@@ -117,6 +117,39 @@ function renderPlayers(p, state, dim, sqSize, s) {
   }
 }
 
+function vecSubtract(a, b) {
+  return {
+    x: b.x - a.x,
+    y: b.y - a.y
+  }
+}
+
+function vecAdd(a, b) {
+  return {
+    x: a.x + b.x,
+    y: a.y + b.y
+  }
+}
+
+function vecScale(vec, scale) {
+  return {
+    x: vec.x * scale,
+    y: vec.y * scale
+  }
+}
+
+function vecMagnitude(vec) {
+  return Math.sqrt(Math.pow(vec.x, 2) + Math.pow(vec.y, 2));
+}
+
+function vecNormalize(vec) {
+  const magnitude = vecMagnitude(vec);
+  return {
+    x: vec.x / magnitude,
+    y: vec.y / magnitude
+  }
+}
+
 /*
 function renderSnakes(p, state, dim, sqSize, s) {
   for(const snake of state.board.snakes) {
@@ -139,16 +172,51 @@ function renderLadders(p, state, dim, sqSize, s) {
     let sp = getFieldCoords(snake.s, dim, sqSize, s);
     let ep = getFieldCoords(snake.e, dim, sqSize, s);
 
+    // Center Start/End point at center origin of the square
+
     sp.x += sqSize / 2;
     sp.y += sqSize / 2;
     ep.x += sqSize / 2;
     ep.y += sqSize / 2;
 
+    const spEp = vecSubtract(sp, ep);
+    const spEpNormal = {
+      x: spEp.y,
+      y: -spEp.x
+    };
+
+    const spEpNormalNormalized = vecNormalize(spEpNormal);
+
+    // Start/End points of first and second ladder leg
+
+    const l1s = vecAdd(sp, vecScale(spEpNormalNormalized, -(sqSize / 6)));
+    const l1e = vecAdd(ep, vecScale(spEpNormalNormalized, -(sqSize / 6)));
+    const l2s = vecAdd(sp, vecScale(spEpNormalNormalized, sqSize / 6));
+    const l2e = vecAdd(ep, vecScale(spEpNormalNormalized, sqSize / 6))
+
+    // Direction vector of each leg
+
+    const l1se = vecSubtract(l1s, l1e);
+    const l1seNormalNormalized = vecNormalize({
+      x: l1se.y,
+      y: -l1se.x
+    });
+
+    for(let i = 1; i < Math.floor(vecMagnitude(l1se)) / (sqSize / 4); i++) {
+      const curVec = vecAdd(l1s, vecScale(vecNormalize(l1se), i * (sqSize / 4)));
+      const curVecRung = vecAdd(curVec, vecScale(l1seNormalNormalized, sqSize / 3));
+      p.push();
+      p.stroke("orange");
+      p.strokeWeight(5);
+      p.line(curVec.x, curVec.y, curVecRung.x, curVecRung.y);
+      p.pop();
+    }
+
     p.push();
     p.stroke("orange");
     p.strokeWeight(5);
-    p.line(sp.x - 10, sp.y, ep.x - 10, ep.y);
-    p.line(sp.x + 10, sp.y, ep.x + 10, ep.y);
+    p.line(l1s.x, l1s.y, l1e.x, l1e.y);
+    p.line(l2s.x, l2s.y, l2e.x, l2e.y);
     p.pop();
   }
 }
