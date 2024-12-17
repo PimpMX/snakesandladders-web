@@ -47,13 +47,16 @@ export default {
 };
 
 function getFieldCoords(position, dim, sqSize, s) {
-  const row = Math.floor(position / dim);
   let col = position;
-  while(col > dim)
+  let row = 0;
+  while(col > dim) {
     col -= dim;
-  console.log(position, row, col);
+    row++;
+  }
   if(row % 2 === 1)
     col = dim - col;
+  else
+    col -= 1;
   return {
     x: col * sqSize,
     y: s - (row + 1) * sqSize
@@ -74,17 +77,15 @@ const render = (p, state) => {
   for(let i = 0; i <= dim; i++) {
     if(i % 2 === 0) {
       for(let j = 0; j < dim; j++) {
-        const x = j * sqSize;
-        const y = s - i * sqSize;
         const num = i * dim - j;
+        const { x, y } = getFieldCoords(num, dim, sqSize, s);
         renderField(p, x, y, sqSize, num,
             j % 2 === 1 ? 'lightblue' : 'green', state);
       }
     } else {
       for(let j = dim; j > 0; j--) {
-        const x = s - j * sqSize;
-        const y = s - i * sqSize;
         const num = i * dim - j + 1;
+        const { x, y } = getFieldCoords(num, dim, sqSize, s);
         renderField(p, x, y, sqSize, num,
             j % 2 === 0 ? 'lightblue' : 'green', state);
       }
