@@ -92,8 +92,8 @@ const render = (p, state) => {
     }
   }
 
-  //renderSnakes(p, state, dim, sqSize, s);
   renderLadders(p, state, dim, sqSize, s);
+  renderSnakes(p, state, dim, sqSize, s);
   renderPlayers(p, state, dim, sqSize, s);
 }
 
@@ -112,8 +112,12 @@ function renderField(p, x, y, size, fieldNum, bgColor) {
 function renderPlayers(p, state, dim, sqSize, s) {
   for(const player of state.players) {
     const { x, y } = getFieldCoords(player.position, dim, sqSize, s);
+
+    p.push();
     p.fill(player.color);
+    p.strokeWeight(3);
     p.circle(x + 0.5 * sqSize, y + 0.5 * sqSize, 0.5 * sqSize);
+    p.pop();
   }
 }
 
@@ -150,21 +154,57 @@ function vecNormalize(vec) {
   }
 }
 
-/*
 function renderSnakes(p, state, dim, sqSize, s) {
   for(const snake of state.board.snakes) {
 
-    let { sX, sY } = getFieldCoords(snake.s, dim, sqSize, s);
-    let { eX, eY } = getFieldCoords(snake.e, dim, sqSize, s);
+    let sp = getFieldCoords(snake.s, dim, sqSize, s);
+    let ep = getFieldCoords(snake.e, dim, sqSize, s);
 
-    sX += s / 2;
-    sY += s / 2;
-    eX += s / 2;
-    eY += s / 2;
+    sp.x += sqSize / 2;
+    sp.y += sqSize / 2;
+    ep.x += sqSize / 2;
+    ep.y += sqSize / 2;
 
-    p.line(sX, sY, eX, eY);
+    const spEp = vecSubtract(sp, ep);
+    const spEpMagnitude = vecMagnitude(spEp);
+    const spEpNormalized = vecNormalize(spEp);
+    const spEpNormal = {
+      x: spEp.y,
+      y: -spEp.x
+    };
+    const spEpNormalNormalized = vecNormalize(spEpNormal);
+
+    // The two control points needed for drawing a bezier curve
+
+    const c1 = vecAdd(
+        vecAdd(sp, vecScale(spEpNormalized, spEpMagnitude * 0.4)),
+        vecScale(spEpNormalNormalized, 40));
+
+    const c2 = vecAdd(
+        vecAdd(sp, vecScale(spEpNormalized, spEpMagnitude * 0.6)),
+        vecScale(spEpNormalNormalized, -40));
+
+    const eye1 = vecAdd(sp, vecScale(spEpNormalNormalized, 4));
+    const eye2 = vecAdd(sp, vecScale(spEpNormalNormalized, -4));
+
+    p.push();
+
+    p.stroke("black");
+    p.strokeWeight(24);
+    p.bezier(sp.x, sp.y, c1.x, c1.y, c2.x, c2.y, ep.x, ep.y);
+
+    p.stroke("green");
+    p.strokeWeight(20);
+    p.bezier(sp.x, sp.y, c1.x, c1.y, c2.x, c2.y, ep.x, ep.y);
+
+    p.stroke("white");
+    p.strokeWeight(6);
+    p.point(eye1.x, eye1.y);
+    p.point(eye2.x, eye2.y);
+
+    p.pop();
   }
-}*/
+}
 
 function renderLadders(p, state, dim, sqSize, s) {
   for(const snake of state.board.ladders) {
@@ -206,6 +246,9 @@ function renderLadders(p, state, dim, sqSize, s) {
       const curVec = vecAdd(l1s, vecScale(vecNormalize(l1se), i * (sqSize / 4)));
       const curVecRung = vecAdd(curVec, vecScale(l1seNormalNormalized, sqSize / 3));
       p.push();
+      p.stroke("black")
+      p.strokeWeight(8);
+      p.line(curVec.x, curVec.y, curVecRung.x, curVecRung.y);
       p.stroke("orange");
       p.strokeWeight(5);
       p.line(curVec.x, curVec.y, curVecRung.x, curVecRung.y);
@@ -213,6 +256,10 @@ function renderLadders(p, state, dim, sqSize, s) {
     }
 
     p.push();
+    p.stroke("black");
+    p.strokeWeight(9);
+    p.line(l1s.x, l1s.y, l1e.x, l1e.y);
+    p.line(l2s.x, l2s.y, l2e.x, l2e.y);
     p.stroke("orange");
     p.strokeWeight(5);
     p.line(l1s.x, l1s.y, l1e.x, l1e.y);
