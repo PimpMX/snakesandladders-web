@@ -87,6 +87,10 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
       "s" -> snake._1,
       "e" -> snake._2
     ))
+    val ladders = gameState.getBoard.getLadders.map(ladder => Json.obj(
+      "s" -> ladder._1,
+      "e" -> ladder._2
+    ))
 
     Json.obj(
       "gameIsRunning" -> gameState.isGameStarted(),
@@ -94,7 +98,8 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
       "currentPlayer" -> currentPlayer,
       "board" -> Json.obj(
         "dimensions" -> gameState.getBoard.getSize,
-        "snakes" -> snakes
+        "snakes" -> snakes,
+        "ladders" -> ladders
       )
     )
   }

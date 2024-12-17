@@ -92,6 +92,8 @@ const render = (p, state) => {
     }
   }
 
+  //renderSnakes(p, state, dim, sqSize, s);
+  renderLadders(p, state, dim, sqSize, s);
   renderPlayers(p, state, dim, sqSize, s);
 }
 
@@ -112,6 +114,42 @@ function renderPlayers(p, state, dim, sqSize, s) {
     const { x, y } = getFieldCoords(player.position, dim, sqSize, s);
     p.fill(player.color);
     p.circle(x + 0.5 * sqSize, y + 0.5 * sqSize, 0.5 * sqSize);
+  }
+}
+
+/*
+function renderSnakes(p, state, dim, sqSize, s) {
+  for(const snake of state.board.snakes) {
+
+    let { sX, sY } = getFieldCoords(snake.s, dim, sqSize, s);
+    let { eX, eY } = getFieldCoords(snake.e, dim, sqSize, s);
+
+    sX += s / 2;
+    sY += s / 2;
+    eX += s / 2;
+    eY += s / 2;
+
+    p.line(sX, sY, eX, eY);
+  }
+}*/
+
+function renderLadders(p, state, dim, sqSize, s) {
+  for(const snake of state.board.ladders) {
+
+    let sp = getFieldCoords(snake.s, dim, sqSize, s);
+    let ep = getFieldCoords(snake.e, dim, sqSize, s);
+
+    sp.x += sqSize / 2;
+    sp.y += sqSize / 2;
+    ep.x += sqSize / 2;
+    ep.y += sqSize / 2;
+
+    p.push();
+    p.stroke("orange");
+    p.strokeWeight(5);
+    p.line(sp.x - 10, sp.y, ep.x - 10, ep.y);
+    p.line(sp.x + 10, sp.y, ep.x + 10, ep.y);
+    p.pop();
   }
 }
 
