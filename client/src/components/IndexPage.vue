@@ -1,5 +1,6 @@
 <script>
-import {requests} from "@/util/requests";
+import { requests } from "@/util/requests";
+import PlayerList from "@/components/PlayerList.vue";  // Import the PlayerList component
 
 export default {
   name: 'IndexPage',
@@ -19,9 +20,12 @@ export default {
       requests.create(dimensions);
     },
     addPlayer(playerName) {
-      requests.addPlayer(playerName)
+      requests.addPlayer(playerName);
       this.playerName = "";
     }
+  },
+  components: {
+    PlayerList  // Register PlayerList as a child component
   }
 }
 </script>
@@ -56,16 +60,7 @@ export default {
         <button id="addPlayerButton" class="btn btn-success" @click="addPlayer(playerName)">Add</button>
       </div>
 
-      <div class="controls d-flex justify-content-center align-items-center">
-        <ul v-if="this.state.players.length == 0" id="playerList" class="list-group list-group-horizontal">
-          <li id="noPlayersMessage" class="list-group-item">No players added yet</li>
-        </ul>
-        <ul v-if="this.state.players.length > 0" id="playerList" class="list-group list-group-horizontal">
-          <li v-for="(player, index) in this.state.players" :key="index" id="noPlayersMessage" class="list-group-item">
-            {{ player.name }}
-          </li>
-        </ul>
-      </div>
+      <PlayerList :players="state.players"/>
     </section>
 
     <section>
