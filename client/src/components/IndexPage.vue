@@ -15,6 +15,13 @@ export default {
   },
   methods: {
     startGame() {
+      // Check if a player has been added to the players list and if a board size is selected
+      if (!this.selectedSize || this.state.players.length === 0) {
+        alert("You must select a board size and add at least one player before starting the game!");
+        return; // Don't proceed with starting the game
+      }
+
+      // Proceed with the game start if validation passes
       requests.start();
     },
     createBoard(dimensions) {
@@ -22,12 +29,15 @@ export default {
       requests.create(dimensions);
     },
     addPlayer(playerName) {
-      requests.addPlayer(playerName);
-      this.playerName = "";
+      // Add player to the players list
+      if (playerName.trim() !== "") {
+        requests.addPlayer(playerName);
+        this.playerName = ""; // Clear the input after adding
+      }
     }
   },
   components: {
-    PlayerList
+    PlayerList  // Register PlayerList as a child component
   }
 }
 </script>
