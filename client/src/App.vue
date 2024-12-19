@@ -71,7 +71,9 @@ body {
   align-items: center;
   min-height: 100vh;
   margin: 0;
-  background-color: #0e5932 !important;
+  background: radial-gradient(circle, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 0.7) 100%), #0e5932;
+  background-size: cover;
+  background-attachment: fixed;
   color: white !important;
   font-family: Arial, sans-serif;
 }
