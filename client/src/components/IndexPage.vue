@@ -9,7 +9,8 @@ export default {
   },
   data() {
     return {
-      playerName: ""
+      playerName: "",
+      selectedSize: null
     }
   },
   methods: {
@@ -17,6 +18,7 @@ export default {
       requests.start();
     },
     createBoard(dimensions) {
+      this.selectedSize = dimensions;
       requests.create(dimensions);
     },
     addPlayer(playerName) {
@@ -25,7 +27,7 @@ export default {
     }
   },
   components: {
-    PlayerList  // Register PlayerList as a child component
+    PlayerList
   }
 }
 </script>
@@ -44,9 +46,29 @@ export default {
     <section class="recommended-sizes">
       <h2 class="col-md-5">Recommended Board Sizes</h2>
       <div class="button-group mt-3">
-        <button class="btn btn-success create-game" @click="createBoard(8)">8x8</button>
-        <button class="btn btn-success create-game" @click="createBoard(10)">10x10</button>
-        <button class="btn btn-success create-game" @click="createBoard(12)">12x12</button>
+        <button
+            :class="['btn', 'btn-success', { 'btn-lightblue': selectedSize === 8 }]"
+            @click="createBoard(8)"
+        >
+          8x8
+        </button>
+        <button
+            :class="['btn', 'btn-success', { 'btn-lightblue': selectedSize === 10 }]"
+            @click="createBoard(10)"
+        >
+          10x10
+        </button>
+        <button
+            :class="['btn', 'btn-success', { 'btn-lightblue': selectedSize === 12 }]"
+            @click="createBoard(12)"
+        >
+          12x12
+        </button>
+      </div>
+
+      <!-- Message is always present in the DOM, but hidden when not needed -->
+      <div v-show="!selectedSize" class="warning-message mt-3">
+        You must select a board size
       </div>
 
       <div id="gameCreationMessage" class="mt-3"></div>
@@ -75,5 +97,18 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
+}
+
+.btn-lightblue {
+  background-color: #18a1ca !important;
+  color: black !important;
+  outline-color: #18a1ca;
+}
+
+.warning-message {
+  color: #ffdd8f;
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
 }
 </style>
