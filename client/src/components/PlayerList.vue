@@ -5,8 +5,8 @@
     </ul>
     <ul v-if="players.length > 0" class="list-group list-group-horizontal">
       <li v-for="(player, index) in players" :key="index" class="list-group-item player-item">
-        <span :style="{ color: player.color }">{{ player.name }}</span>
-        <!-- Display player's name with their color -->
+        <span :style="{ color: player.color }">{{ player.name }} ({{ player.position }})</span>
+        <!-- Display player's name with their color and position -->
       </li>
     </ul>
   </div>
