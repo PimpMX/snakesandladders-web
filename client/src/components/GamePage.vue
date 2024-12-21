@@ -2,25 +2,62 @@
 import GameControls from "@/components/GameControls.vue";
 import GameField from "@/components/GameField.vue";
 import PlayerList from "@/components/PlayerList.vue";
-
+import { requests } from "@/util/requests";
 
 export default {
   name: 'GamePage',
   props: {
     state: Object
   },
-  methods: {},
-  components: {GameField, GameControls, PlayerList}
+  data() {
+    return {
+      currentPlayerIndex: 0,
+      previousStates: []
+    };
+  },
+  methods: {
+    async handleDiceRoll(diceValue) {
+      const stateCopy = JSON.parse(JSON.stringify(this.state));
+      this.previousStates.push(stateCopy);
+
+      const currentPlayer = this.state.players[this.currentPlayerIndex];
+      currentPlayer.position += diceValue;  // Update the player's position with dice value
+
+      this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.state.players.length;
+
+      this.$emit('updateState', this.state);
+
+      this.$forceUpdate();
+    },
+
+    async undoMove() {
+      if (this.previousStates.length > 0) {
+        const lastState = this.previousStates.pop();
+
+        try {
+          await requests.undo();
+        } catch (error) {
+          console.error("Error during undo:", error);
+          return;
+        }
+
+        this.$emit('updateState', lastState);
+
+        this.currentPlayerIndex = (this.currentPlayerIndex - 1 + this.state.players.length) % this.state.players.length;
+
+        this.$forceUpdate();
+      }
+    }
+  },
+  components: { GameField, GameControls, PlayerList }
 }
 </script>
 
 <template>
-  <GameControls />
-  <PlayerList :players="state.players" />
+  <GameControls @rollDice="handleDiceRoll" @undoMove="undoMove" />
+  <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex" />
   <GameField :state="state" />
-
 </template>
 
 <style scoped>
-
 </style>
