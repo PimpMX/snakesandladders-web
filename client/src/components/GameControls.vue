@@ -2,7 +2,6 @@
   <div id="gameControls" class="controls mb-2">
     <button id="restartGameButton" class="btn btn-secondary" @click="exitGame()">Exit</button>
     <button id="undoButton" class="btn btn-secondary" @click="undoMove()">Undo</button>
-    <button id="rollButton" class="btn btn-secondary" @click="roll()">Roll</button>
   </div>
 
 
@@ -27,10 +26,6 @@ export default {
     undoMove() {
       this.$emit('undoMove');
     },
-    roll() {
-      this.$refs.dice.rollDice();
-    },
-
     handleDiceRoll(diceValue) {
       this.$emit('rollDice', diceValue);
     }
@@ -47,7 +42,7 @@ export default {
 .dice-container {
   position: absolute;
   top: 50%;
-  right: 15%;
+  right: 20%;
   transform: translateY(-50%);
   width: 10vw;
   height: 10vw;
