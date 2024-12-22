@@ -17,17 +17,25 @@ export default {
   },
   methods: {
     async handleDiceRoll(diceValue) {
-      const stateCopy = JSON.parse(JSON.stringify(this.state));
-      this.previousStates.push(stateCopy);
+      // Send the roll request to the server
+      try {
+        await requests.roll();  // This will trigger the backend roll logic
 
-      const currentPlayer = this.state.players[this.currentPlayerIndex];
-      currentPlayer.position += diceValue;  // Update the player's position with dice value
+        // Update the player's position after the dice roll
+        const stateCopy = JSON.parse(JSON.stringify(this.state));
+        this.previousStates.push(stateCopy);
 
-      this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.state.players.length;
+        const currentPlayer = this.state.players[this.currentPlayerIndex];
+        currentPlayer.position += diceValue;  // Update the player's position with dice value
 
-      this.$emit('updateState', this.state);
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.state.players.length;
 
-      this.$forceUpdate();
+        this.$emit('updateState', this.state);
+
+        this.$forceUpdate();
+      } catch (error) {
+        console.error("Error during dice roll:", error);
+      }
     },
 
     async undoMove() {
@@ -49,15 +57,12 @@ export default {
       }
     }
   },
-  components: { GameField, GameControls, PlayerList }
+  components: {GameField, GameControls, PlayerList}
 }
 </script>
 
 <template>
-  <GameControls @rollDice="handleDiceRoll" @undoMove="undoMove" />
-  <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex" />
-  <GameField :state="state" />
+  <GameControls @rollDice="handleDiceRoll" @undoMove="undoMove"/>
+  <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex"/>
+  <GameField :state="state"/>
 </template>
-
-<style scoped>
-</style>

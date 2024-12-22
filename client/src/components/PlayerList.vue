@@ -1,13 +1,12 @@
 <template>
-  <div id="PlayerList" class="container">
-    <ul class="list-group list-group-horizontal">
-      <li v-if="players.length === 0" class="list-group-item">No players added yet</li>
-
-      <li v-for="(player, index) in players" :key="index" class="list-group-item PlayerItem"
-          :class="{ 'list-group-item-info': index === currentPlayerIndex }">
-        <span :style="{ fontWeight: index === currentPlayerIndex ? 'bold' : 'normal', color: player.color }">
-          {{ player.name }} ({{ player.position }})
-        </span>
+  <div id="PlayerList">
+    <ul v-if="players.length === 0" class="list-group list-group-horizontal">
+      <li class="list-group-item">No players added yet</li>
+    </ul>
+    <ul v-if="players.length > 0" class="list-group list-group-horizontal">
+      <li v-for="(player, index) in players" :key="index" class="list-group-item player-item">
+        <span :style="{ color: player.color }">{{ player.name }} ({{ player.position }})</span>
+        <!-- Display player's name with their color and position -->
       </li>
     </ul>
   </div>
@@ -17,8 +16,7 @@
 export default {
   name: 'PlayerList',
   props: {
-    players: Array,
-    currentPlayerIndex: Number
+    players: Array
   }
 }
 </script>
@@ -29,13 +27,10 @@ export default {
   flex-direction: column;
   align-items: center;
   text-align: center;
+  padding-top: 10px;
   padding-bottom: 15px;
 }
-
-.list-group-item-info {
-  background-color: #13a7d6 !important;
-}
-.PlayerItem{
-  background-color: #8fd4ea;
+.player-item {
+  background-color: lightblue;
 }
 </style>

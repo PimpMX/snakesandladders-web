@@ -39,6 +39,7 @@ export default {
           this.diceImage = this.diceImages[this.finalValue - 1];
           this.rolling = false;
 
+          // Emit the rolled dice value to the parent component
           this.$emit('diceRolled', this.finalValue);
         }
       }, 100);
