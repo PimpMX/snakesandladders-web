@@ -62,7 +62,7 @@ export default {
 </script>
 
 <template>
-  <GameControls @rollDice="handleDiceRoll" @undoMove="undoMove"/>
+  <GameControls :state="state" @rollDice="handleDiceRoll" @undoMove="undoMove"/>
   <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex"/>
   <GameField :state="state"/>
 </template>

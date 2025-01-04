@@ -10,29 +10,33 @@ export default {
   data() {
     return {
       playerName: "",
-      selectedSize: null
     }
   },
   methods: {
     startGame() {
       // Check if a player has been added to the players list and if a board size is selected
-      if (!this.selectedSize || this.state.players.length === 0) {
-        alert("You must select a board size and add at least one player before starting the game!");
+      if (this.state.players.length === 0) {
+        alert("You must select a board size and need at least one player in the lobby before starting the game!");
         return; // Don't proceed with starting the game
       }
-
       // Proceed with the game start if validation passes
       requests.start();
     },
     createBoard(dimensions) {
-      this.selectedSize = dimensions;
       requests.create(dimensions);
+      this.$router.push({
+        path: this.$route.path,
+        query: {}
+      })
     },
-    addPlayer(playerName) {
+    confirmPlayerName(playerName) {
       // Add player to the players list
       if (playerName.trim() !== "") {
         requests.addPlayer(playerName);
-        this.playerName = ""; // Clear the input after adding
+        this.$router.push({
+          path: this.$route.path,
+          query: { ...this.$route.query, playerName: this.playerName }
+        });
       }
     }
   },
@@ -57,19 +61,19 @@ export default {
       <h2 class="col-md-5">Recommended Board Sizes</h2>
       <div class="button-group mt-3">
         <button
-            :class="['btn', 'btn-success', { 'btn-lightblue': selectedSize === 8 }]"
+            :class="['btn', 'btn-success', { 'btn-lightblue': Math.sqrt(state.board.dimensions) === 8 }]"
             @click="createBoard(8)"
         >
           8x8
         </button>
         <button
-            :class="['btn', 'btn-success', { 'btn-lightblue': selectedSize === 10 }]"
+            :class="['btn', 'btn-success', { 'btn-lightblue': Math.sqrt(state.board.dimensions) === 10 }]"
             @click="createBoard(10)"
         >
           10x10
         </button>
         <button
-            :class="['btn', 'btn-success', { 'btn-lightblue': selectedSize === 12 }]"
+            :class="['btn', 'btn-success', { 'btn-lightblue': Math.sqrt(state.board.dimensions) === 12 }]"
             @click="createBoard(12)"
         >
           12x12
@@ -77,7 +81,9 @@ export default {
       </div>
 
       <!-- Message is always present in the DOM, but hidden when not needed -->
-      <div v-show="!selectedSize" class="warning-message mt-3">
+      <div v-show="Math.sqrt(state.board.dimensions) !== 8 &&
+        Math.sqrt(state.board.dimensions) !== 10 &&
+        Math.sqrt(state.board.dimensions) !== 12" class="warning-message mt-3">
         You must select a board size
       </div>
 
@@ -85,19 +91,20 @@ export default {
     </section>
 
     <section>
-      <h2 class="col-md-5">Add Players</h2>
+      <h2 class="col-md-3">The Lobby</h2>
+      <PlayerList class="mt-2" :players="state.players" :local-player-name="this.playerName"/>
+    </section>
+
+    <section v-if="!this.$route.query.playerName">
+      <h2 class="col-md-4">Choose Your Name</h2>
       <div class="input-group justify-content-center mt-3">
-        <input id="playerName" v-model="playerName" class="input-group-text col-md-3"
-               @keydown.enter="addPlayer(playerName)" type="text" placeholder="Player Name" required/>
-        <button id="addPlayerButton" class="btn btn-success" @click="addPlayer(playerName)">Add</button>
+        <input id="playerName" v-model="playerName" class="input-group-text col-md-2"
+               @keydown.enter="confirmPlayerName(playerName)" type="text" placeholder="Your Player Name" required/>
+        <button id="addPlayerButton" class="btn btn-success" @click="confirmPlayerName(playerName)">Confirm</button>
       </div>
-
-      <PlayerList :players="state.players"/>
     </section>
 
-    <section>
-      <button id="startGameButton" class="btn btn-primary col-md-2" @click="startGame">Start</button>
-    </section>
+    <button v-if="this.$route.query.playerName" id="startGameButton" class="btn btn-primary col-md-2" @click="startGame">Start Game</button>
   </div>
 </template>
 

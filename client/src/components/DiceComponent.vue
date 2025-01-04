@@ -1,8 +1,9 @@
 <template>
-  <div class="dice-container">
-    <img :src="diceImage" alt="Dice" />
-    <button @click="rollDice" type="button" class="dice-button" :disabled="rolling">
-      {{ rolling ? "Rolling..." : "Roll Dice" }}
+  <div class="ms-5 dice-container d-flex flex-column">
+    <img :src="diceImage" alt="Dice" style="width: 4vw; height: 4vw"/>
+    <button @click="rollDice" type="button" class="dice-button"
+            :disabled="this.$route.query.playerName !== this.state.currentPlayer.name">
+      {{ rolling ? "Rolling" : "Roll" }}
     </button>
   </div>
 </template>
@@ -10,6 +11,9 @@
 <script>
 export default {
   name: "DiceComponent",
+  props: {
+    state: Object
+  },
   data() {
     return {
       diceImages: [
@@ -39,7 +43,6 @@ export default {
           clearInterval(rollInterval);
 
           this.finalValue = Math.floor(Math.random() * 6) + 1;
-
           this.diceImage = this.diceImages[this.finalValue - 1];
           this.rolling = false;
 
@@ -67,11 +70,11 @@ export default {
 .dice-button {
   background-color: #4caf50;
   color: white;
-  font-size: 16px;
+  font-size: 1rem;
   border: none;
-  padding: 10px 20px;
-  cursor: pointer;
   border-radius: 5px;
+  width: 4vw;
+  height: 2vw;
 }
 
 .dice-button:hover {

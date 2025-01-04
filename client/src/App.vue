@@ -19,16 +19,10 @@ export default {
     }
   },
   async mounted() {
-
     this.state = await requests.state();
-
-    console.log("Initial State");
-    console.log(this.state);
-
     const onMessage = function (message) {
       this.state = message;
     }.bind(this);
-
     connectWebSocket(onMessage);
   }
 }
@@ -83,7 +77,8 @@ h1 {
 }
 
 section {
-  margin: 20px 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
   width: 100%;
 }
 
@@ -98,7 +93,8 @@ section h2 {
 
 section.recommended-sizes {
   text-align: center;
-  margin: 20px 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .button-group {
