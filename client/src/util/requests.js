@@ -50,7 +50,7 @@ export const requests = {
         });
     },
     roll() {
-        fetchRequest(`/api/roll`, {
+        return fetchRequest(`/api/roll`, {
             method: 'GET',
         }).catch(() => {
             alert("Error rolling");

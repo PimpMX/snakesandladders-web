@@ -26,8 +26,21 @@ export default {
     undoMove() {
       this.$emit('undoMove');
     },
-    handleDiceRoll(diceValue) {
-      this.$emit('rollDice', diceValue);
+    async handleDiceRoll(diceValue) {
+      try {
+        // Send the roll request to the server
+        await requests.roll();
+
+        const currentPlayer = this.state.players[this.currentPlayerIndex];
+        currentPlayer.position += diceValue;
+
+        this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.state.players.length;
+
+        this.$emit('updateState', this.state);
+        this.$forceUpdate();
+      } catch (error) {
+        console.error("Error during dice roll:", error);
+      }
     }
   }
 }

@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     rollDice() {
-      if (this.rolling) return; // Prevent multiple rolls while rolling
+      if (this.rolling) return;
       this.rolling = true;
       let rollCount = 0;
 
@@ -46,7 +46,6 @@ export default {
           this.diceImage = this.diceImages[this.finalValue - 1];
           this.rolling = false;
 
-          // Emit the rolled dice value to the parent component
           this.$emit("diceRolled", this.finalValue);
         }
       }, 100);
