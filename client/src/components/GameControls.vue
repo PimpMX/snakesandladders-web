@@ -23,14 +23,22 @@ export default {
     exitGame() {
       requests.restart();
     },
-    undoMove() {
-      this.$emit('undoMove');
+    async undoMove() {
+      try {
+        // Call the undo function on the server
+        await requests.undo();
+
+        this.$emit('updateState', this.state);
+        this.$forceUpdate();
+      } catch (error) {
+        console.error("Error during undo:", error);
+      }
     },
     async handleDiceRoll(diceValue) {
       try {
-        // Send the roll request to the server
         await requests.roll();
 
+        // Update the player's position after the dice roll
         const currentPlayer = this.state.players[this.currentPlayerIndex];
         currentPlayer.position += diceValue;
 
