@@ -1,13 +1,12 @@
 <template>
-  <div>
     <IndexPage v-if="state && !state.gameIsRunning" :state="state"/>
     <GamePage v-if="state && state.gameIsRunning" :state="state"/>
+    <div class="offline-banner" v-if="this.offlineMode">Offline</div>
     <div class="install-pwa" v-if="deferredPrompt">
       <v-btn @click="installPwa" class="install-pwa-button custom-btn">
         Install App
       </v-btn>
     </div>
-  </div>
 </template>
 
 <script>
@@ -23,11 +22,13 @@ export default {
   data() {
     return {
       state: null,
-      deferredPrompt: null
+      deferredPrompt: null,
+      offlineMode: false
     }
   },
   async mounted() {
     this.state = await requests.state();
+    this.offlineMode = window.isCacheResponse;
     const onMessage = function (message) {
       this.state = message;
     }.bind(this);
@@ -145,6 +146,22 @@ section.recommended-sizes {
   padding: 12px 24px;
   border-radius: 8px;
   transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.offline-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #d32f2f;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  line-height: 50px;
+  z-index: 1000;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.2);
 }
 
 </style>

@@ -37,7 +37,23 @@ module.exports = defineConfig({
       config.optimization.runtimeChunk = false;
     }
     config.plugins.push(new CleanWebpackPlugin());
-    config.plugins.push(new GenerateSW());
+    config.plugins.push(new GenerateSW({
+      clientsClaim: true,
+      skipWaiting: true,
+      runtimeCaching: [
+        {
+          urlPattern: new RegExp('/api/state'),
+          handler: 'NetworkFirst',
+          options: {
+            cacheName: 'gamestate-cache',
+            expiration: {
+              maxEntries: 10,
+              maxAgeSeconds: 60 * 60 * 24,
+            },
+          },
+        }
+      ]
+    }));
   },
   chainWebpack: (config) => {
     if (isWcMode) {
