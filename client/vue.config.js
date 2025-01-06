@@ -1,5 +1,6 @@
 const { defineConfig } = require('@vue/cli-service');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const { GenerateSW } = require("workbox-webpack-plugin");
 
 const isWcMode = process.env.VUE_CLI_SERVICE_MODE === 'wc';
 
@@ -36,6 +37,7 @@ module.exports = defineConfig({
       config.optimization.runtimeChunk = false;
     }
     config.plugins.push(new CleanWebpackPlugin());
+    config.plugins.push(new GenerateSW());
   },
   chainWebpack: (config) => {
     if (isWcMode) {

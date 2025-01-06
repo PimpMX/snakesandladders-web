@@ -1,22 +1,29 @@
 <template>
-  <IndexPage v-if="state && !state.gameIsRunning" :state="state"/>
-  <GamePage v-if="state && state.gameIsRunning" :state="state"/>
+  <div>
+    <IndexPage v-if="state && !state.gameIsRunning" :state="state"/>
+    <GamePage v-if="state && state.gameIsRunning" :state="state"/>
+    <div class="install-pwa" v-if="deferredPrompt">
+      <v-btn @click="installPwa" class="install-pwa-button custom-btn">
+        Install App
+      </v-btn>
+    </div>
+  </div>
 </template>
 
 <script>
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {connectWebSocket} from "@/util/websocket";
-import {requests} from "@/util/requests";
+import { connectWebSocket } from "@/util/websocket";
+import { requests } from "@/util/requests";
 import IndexPage from "@/components/IndexPage.vue";
-import GamePage from "@/components/GamePage.vue"
+import GamePage from "@/components/GamePage.vue";
 
 export default {
   name: 'App',
-  components: {IndexPage, GamePage},
+  components: { IndexPage, GamePage },
   data() {
     return {
-      state: null
+      state: null,
+      deferredPrompt: null
     }
   },
   async mounted() {
@@ -25,6 +32,22 @@ export default {
       this.state = message;
     }.bind(this);
     connectWebSocket(onMessage);
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      this.deferredPrompt = event;
+    });
+  },
+  methods: {
+    installPwa() {
+      if (this.deferredPrompt) {
+        // Show the installation prompt
+        this.deferredPrompt.prompt();
+        this.deferredPrompt.userChoice.then((choiceResult) => {
+          console.log(choiceResult.outcome); // Can be 'accepted' or 'dismissed'
+          this.deferredPrompt = null; // Reset the prompt after it's used
+        });
+      }
+    }
   }
 }
 </script>
@@ -73,6 +96,10 @@ body {
   font-family: Arial, sans-serif;
 }
 
+html {
+  overflow-y: hidden !important;
+}
+
 h1 {
   font-size: 48px;
 }
@@ -103,6 +130,21 @@ section.recommended-sizes {
   justify-content: center;
   gap: 10px;
   margin-top: 10px;
+}
+
+.install-pwa-button {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  background-color: #45a049;
+}
+
+.custom-btn {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
 </style>
