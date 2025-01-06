@@ -4,6 +4,7 @@
 </template>
 
 <script>
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {connectWebSocket} from "@/util/websocket";
 import {requests} from "@/util/requests";
