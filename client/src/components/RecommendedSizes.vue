@@ -1,33 +1,24 @@
 <template>
   <section class="recommended-sizes">
-    <h2 class="col-md-5">Recommended Board Sizes</h2>
-    <div class="button-group mt-3">
-      <button
-          :class="['btn', selectedSize === 8 ? 'btn-blue' : 'btn-success']"
-          @click="selectSize(8)"
+    <h2 class="text-h6">Recommended Board Sizes</h2>
+    <div class="button-group">
+      <v-btn
+          v-for="size in [8, 10, 12]"
+          :key="size"
+          :class="selectedSize === size ? 'selected-btn' : 'unselected-btn'"
+          class="ma-2 custom-btn"
+          @click="selectSize(size)"
       >
-        8x8
-      </button>
-      <button
-          :class="['btn', selectedSize === 10 ? 'btn-blue' : 'btn-success']"
-          @click="selectSize(10)"
-      >
-        10x10
-      </button>
-      <button
-          :class="['btn', selectedSize === 12 ? 'btn-blue' : 'btn-success']"
-          @click="selectSize(12)"
-      >
-        12x12
-      </button>
+        {{ size }}x{{ size }}
+      </v-btn>
     </div>
-    <!-- Warning message below the buttons -->
-    <div
+    <v-alert
         v-show="![8, 10, 12].includes(selectedSize)"
-        class="warning-message mt-3"
+        type="warning"
+        class="mt-3"
     >
-      You must select a board size
-    </div>
+      You must select a board size.
+    </v-alert>
   </section>
 </template>
 
@@ -46,49 +37,29 @@ export default {
 </script>
 
 <style scoped>
-.recommended-sizes {
-  text-align: center;
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
-.button-group {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-}
-
-.btn {
-  padding: 10px 20px;
+.custom-btn {
   font-size: 16px;
-  cursor: pointer;
-  border-radius: 5px;
-  border: none;
-  transition: background-color 0.3s ease;
-}
-
-.btn-success {
-  background-color: #198754;
-  color: white;
-}
-
-.btn-success:hover {
-  background-color: #0d5a37;
-}
-
-.btn-blue {
-  background-color: #007bff;
-  color: white;
-}
-
-.btn-blue:hover {
-  background-color: #0056b3;
-}
-
-.warning-message {
-  color: #ffdd8f;
   font-weight: bold;
-  text-align: center;
-  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.unselected-btn {
+  background-color: #198754 !important; /* Green */
+  color: white !important;
+}
+
+.unselected-btn:hover {
+  background-color: #146c43 !important; /* Darker green */
+}
+
+.selected-btn {
+  background-color: #007bff !important; /* Blue */
+  color: white !important;
+}
+
+.selected-btn:hover {
+  background-color: #0056b3 !important; /* Darker blue */
 }
 </style>
