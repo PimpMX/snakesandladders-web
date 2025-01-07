@@ -3,12 +3,10 @@
   <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex" />
   <GameField :state="state" />
 
-  <!-- Modal for displaying winner notification -->
-  <div v-if="winner" class="winner-modal">
-    <div class="modal-content">
-      <h2>🎉 {{ winner }} won the game! 🎉</h2>
-      <button class="btn btn-primary" @click="exitGame">Exit</button>
-    </div>
+  <!-- Winner Banner -->
+  <div v-if="winner" class="winner-banner">
+    <h2>🎉 {{ winner }} has won the game! 🎉</h2>
+    <button class="btn btn-primary" @click="exitGame">Exit</button>
   </div>
 </template>
 
@@ -21,20 +19,25 @@ import { requests } from "@/util/requests";
 export default {
   name: 'GamePage',
   props: {
-    state: Object
+    state: Object,
   },
   data() {
     return {
       currentPlayerIndex: 0,
       previousStates: [],
-      winner: null, // To store the winner's name
+      winner: null, // Winner name
     };
+  },
+  mounted() {
+    // Start polling for a winner
+    this.pollWinner();
   },
   methods: {
     async handleDiceRoll(diceValue) {
       try {
         await requests.roll();
 
+        // Update game state locally
         const stateCopy = JSON.parse(JSON.stringify(this.state));
         this.previousStates.push(stateCopy);
 
@@ -42,14 +45,7 @@ export default {
         currentPlayer.position += diceValue;
 
         this.currentPlayerIndex = (this.currentPlayerIndex + 1) % this.state.players.length;
-
         this.$emit('updateState', this.state);
-
-        // Check for a winner after the dice roll
-        const winResponse = await requests.checkWin();
-        if (winResponse?.winner) {
-          this.winner = winResponse.winner; // Set winner's name
-        }
 
         this.$forceUpdate();
       } catch (error) {
@@ -74,9 +70,21 @@ export default {
         this.$forceUpdate();
       }
     },
-    exitGame() {
-      requests.restart(); // Restart the game
-      this.winner = null; // Clear winner notification
+    async exitGame() {
+      await requests.restart(); // Restart game
+      this.winner = null; // Clear winner banner
+    },
+    async pollWinner() {
+      try {
+        setInterval(async () => {
+          const response = await requests.checkWin();
+          if (response?.winner && response.winner !== null) {
+            this.winner = response.winner; // Set the winner and display banner
+          }
+        }, 2000); // Check every 2 seconds
+      } catch (error) {
+        console.error("Error checking winner:", error);
+      }
     },
   },
   components: { GameField, GameControls, PlayerList },
@@ -84,25 +92,26 @@ export default {
 </script>
 
 <style scoped>
-.winner-modal {
+.winner-banner {
   position: fixed;
-  top: 50%;
+  top: 20%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
+  background-color: rgba(152, 82, 82, 0.9);
+  padding: 20px 40px;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   text-align: center;
-  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
 }
 
-.modal-content h2 {
+.winner-banner h2 {
+  font-size: 2rem;
   margin-bottom: 20px;
 }
 
-.modal-content .btn {
+.winner-banner .btn {
+  font-size: 1.2rem;
   padding: 10px 20px;
-  font-size: 1rem;
 }
 </style>
