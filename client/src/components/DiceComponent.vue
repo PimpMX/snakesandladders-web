@@ -1,18 +1,24 @@
 <template>
   <div class="ms-5 dice-container d-flex flex-column">
-    <img :src="diceImage" alt="Dice" style="width: 4vw; height: 4vw"/>
-    <button @click="rollDice" type="button" class="dice-button"
-            :disabled="this.$route.query.playerName !== this.state.currentPlayer.name">
+    <img :src="diceImage" alt="Dice" style="width: 4vw; height: 4vw" />
+    <button
+        @click="rollDice"
+        type="button"
+        class="dice-button"
+        :disabled="this.$route.query.playerName !== this.state.currentPlayer.name || rolling"
+    >
       {{ rolling ? "Rolling" : "Roll" }}
     </button>
   </div>
 </template>
 
 <script>
+import { requests } from "@/util/requests";
+
 export default {
   name: "DiceComponent",
   props: {
-    state: Object
+    state: Object,
   },
   data() {
     return {
@@ -30,7 +36,7 @@ export default {
     };
   },
   methods: {
-    rollDice() {
+    async rollDice() {
       if (this.rolling) return;
       this.rolling = true;
       let rollCount = 0;
@@ -47,8 +53,19 @@ export default {
           this.rolling = false;
 
           this.$emit("diceRolled", this.finalValue);
+          this.checkWin(); // Check for a winner after the dice roll
         }
       }, 100);
+    },
+    async checkWin() {
+      try {
+        const winResponse = await requests.checkWin(); // Check win API call
+        if (winResponse?.winner) {
+          this.$emit("gameWon", winResponse.winner); // Notify parent about the winner
+        }
+      } catch (error) {
+        console.error("Error checking for winner:", error);
+      }
     },
   },
 };

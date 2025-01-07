@@ -34,6 +34,21 @@ class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerC
     NoContent
   }
 
+  def checkWin: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    if (controller.checkWin()) {
+      val winner = controller.getCurrentGameState.getPlayers
+        .find(_.getPosition == controller.getBoardSize)
+        .map(_.getName)
+        .getOrElse("Unknown")
+      Ok(Json.obj("winner" -> winner))
+    } else {
+      Ok(Json.obj("winner" -> JsNull))
+    }
+  }
+
+
+
+
   def restartGame: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.restartGame()
     NoContent

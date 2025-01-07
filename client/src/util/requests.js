@@ -34,44 +34,50 @@ export const requests = {
     },
     create(dimensions) {
         fetchRequest(`/api/create/${dimensions}`, {
-            method: 'GET',
+            method: "GET",
         }).catch(() => {
             alert("Error creating the game");
         });
     },
     undo() {
         fetchRequest(`/api/undo`, {
-            method: 'GET',
+            method: "GET",
         }).catch(() => {
             alert("Error undoing the last step");
         });
     },
     start() {
         fetchRequest(`/api/start`, {
-            method: 'GET',
+            method: "GET",
         }).catch(() => {
             alert("Error starting game");
         });
     },
     restart() {
         fetchRequest(`/api/restart`, {
-            method: 'GET',
+            method: "GET",
         }).catch(() => {
             alert("Error restarting game");
         });
     },
     roll() {
         return fetchRequest(`/api/roll`, {
-            method: 'GET',
+            method: "GET",
         }).catch(() => {
             alert("Error rolling");
         });
     },
     addPlayer(playerName) {
         fetchRequest(`/api/add/${playerName}`, {
-            method: 'GET',
+            method: "GET",
         }).catch(() => {
             alert("Error adding new player");
         });
-    }
+    },
+    async checkWin() {
+        return fetchRequest(`/api/checkWin`, {
+            method: "GET",
+        });
+    },
 };
+
