@@ -13,7 +13,7 @@ GET    /api/restart                    controllers.SnakesAndLaddersController.re
 GET    /api/add/:playerName            controllers.SnakesAndLaddersController.addPlayer(playerName: String)
 GET    /api/roll                       controllers.SnakesAndLaddersController.rollDice
 GET    /api/undo                       controllers.SnakesAndLaddersController.undoLastStep
-GET   /api/checkWin    controllers.SnakesAndLaddersController.checkWin
+GET    /api/checkWin    controllers.SnakesAndLaddersController.checkWin
 
 
 # Map static resources from the /public folder to the /assets URL path
