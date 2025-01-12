@@ -12,6 +12,7 @@ export function fetchRequest(url, options = {}) {
                 console.log('Response fetched from network:', url);
             }
             if (!response.ok) {
+                window.isCacheResponse = true;
                 throw new Error(`Request failed with status ${response.status}`);
             }
             if (response.status === 204) {
@@ -20,6 +21,7 @@ export function fetchRequest(url, options = {}) {
             return response.json(); // or other response handling logic
         })
         .catch(error => {
+            window.isCacheResponse = true;
             console.error("Error:", error);
             throw error;
         });
@@ -36,21 +38,18 @@ export const requests = {
         fetchRequest(`/api/create/${dimensions}`, {
             method: "GET",
         }).catch(() => {
-            alert("Error creating the game");
         });
     },
     undo() {
         fetchRequest(`/api/undo`, {
             method: "GET",
         }).catch(() => {
-            alert("Error undoing the last step");
         });
     },
     start() {
         fetchRequest(`/api/start`, {
             method: "GET",
         }).catch(() => {
-            alert("Error starting game");
         });
     },
     restart() {
@@ -64,14 +63,12 @@ export const requests = {
         return fetchRequest(`/api/roll`, {
             method: "GET",
         }).catch(() => {
-            alert("Error rolling");
         });
     },
     addPlayer(playerName) {
         fetchRequest(`/api/add/${playerName}`, {
             method: "GET",
         }).catch(() => {
-            alert("Error adding new player");
         });
     },
     async checkWin() {

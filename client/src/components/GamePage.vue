@@ -2,7 +2,6 @@
   <GameControls :state="state" @rollDice="handleDiceRoll" @undoMove="undoMove" />
   <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex" />
   <GameField :state="state" />
-
   <!-- Winner Banner -->
   <div v-if="winner" class="winner-banner">
     <h2>🎉 {{ winner }} has won the game! 🎉</h2>
@@ -25,11 +24,10 @@ export default {
     return {
       currentPlayerIndex: 0,
       previousStates: [],
-      winner: null, // Winner name
+      winner: null,
     };
   },
   mounted() {
-    // Start polling for a winner
     this.pollWinner();
   },
   methods: {

@@ -37,6 +37,10 @@ export default {
       event.preventDefault();
       this.deferredPrompt = event;
     });
+    window.addEventListener("click", () => {
+      this.offlineMode = window.isCacheResponse;
+      console.log("callled");
+    })
   },
   methods: {
     installPwa() {
