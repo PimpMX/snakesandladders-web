@@ -1,5 +1,6 @@
 export function connectWebSocket(onMessageCb) {
-    const websocket = new WebSocket("ws://localhost:9000/api/websocket");
+
+    const websocket = new WebSocket(`ws://${window.location.hostname}/api/websocket`);
 
     websocket.onopen = function () {
         console.debug("Connected to Websocket");
