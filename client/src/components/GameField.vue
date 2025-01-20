@@ -277,12 +277,23 @@ function renderLadders(p, state, dim, sqSize, s) {
 </template>
 
 <style scoped>
-.canvas-container {
-  height: 35vw;
-  width: 35vw;
+
+@media (max-width: 768px) {
+  .canvas-container {
+    height: 100vw;
+    width: auto;
+  }
 }
 
-.canvas-container >>> canvas {
-  outline: 2px solid black;
+@media (min-width: 768px) {
+  .canvas-container {
+    height: 35vw;
+    width: 35vw;
+  }
+
+  .canvas-container >>> canvas {
+    outline: 2px solid black;
+  }
 }
+
 </style>

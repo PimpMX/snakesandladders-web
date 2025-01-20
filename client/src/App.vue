@@ -1,12 +1,29 @@
 <template>
+
     <IndexPage v-if="state && !state.gameIsRunning" :state="state"/>
     <GamePage v-if="state && state.gameIsRunning" :state="state"/>
     <div class="offline-banner" v-if="this.offlineMode">Offline</div>
-    <div class="install-pwa" v-if="deferredPrompt">
-      <v-btn @click="installPwa" class="install-pwa-button custom-btn">
+    <div class="d-flex align-items-center justify-content-between" style="position: absolute; top: 30px; left: 30px">
+      <button
+        v-if="!userCredentials"
+        class="btn btn-primary me-2"
+        @click="loginWithGoogle"
+      >
+        Login with Google
+      </button>
+      <button v-if="deferredPrompt"
+        @click="installPwa"
+        class="btn btn-success">
         Install App
-      </v-btn>
+      </button>
     </div>
+
+    <img v-if="userCredentials?.photoURL"
+       :src="`${userCredentials.photoURL}`"
+       style="border-radius: 50%; position:absolute; top: 30px; right: 30px; height: 10%; width: auto"
+       alt="Profile Image"
+    />
+
 </template>
 
 <script>
@@ -15,6 +32,7 @@ import { connectWebSocket } from "@/util/websocket";
 import { requests } from "@/util/requests";
 import IndexPage from "@/components/IndexPage.vue";
 import GamePage from "@/components/GamePage.vue";
+import {loginWithGoogle} from "@/firebase";
 
 export default {
   name: 'App',
@@ -23,6 +41,7 @@ export default {
     return {
       state: null,
       deferredPrompt: null,
+      userCredentials: null,
       offlineMode: false
     }
   },
@@ -39,10 +58,24 @@ export default {
     });
     window.addEventListener("click", () => {
       this.offlineMode = window.isCacheResponse;
-      console.log("callled");
     })
   },
   methods: {
+    async loginWithGoogle() {
+      try {
+        const user = await loginWithGoogle();
+        console.log(`Welcome, ${user.displayName}`);
+        this.userCredentials = user.toJSON();
+        const firstName = user.displayName.split(" ")[0];
+        this.$router.push({
+          path: this.$route.path,
+          query: { ...this.$route.query, playerName: firstName },
+        });
+        requests.addPlayer(firstName);
+      } catch (error) {
+        console.error("Error logging in:", error);
+      }
+    },
     installPwa() {
       if (this.deferredPrompt) {
         // Show the installation prompt
@@ -99,10 +132,6 @@ body {
   background-attachment: fixed;
   color: white !important;
   font-family: Arial, sans-serif;
-}
-
-html {
-  overflow-y: hidden !important;
 }
 
 h1 {
