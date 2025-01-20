@@ -1,6 +1,6 @@
 <template>
   <div class="ms-5 dice-container d-flex flex-column">
-    <img :src="diceImage" alt="Dice" style="width: 4vw; height: 4vw" />
+    <img class="dice-img" :src="diceImage" alt="Dice" />
     <button
         @click="rollDice"
         type="button"
@@ -83,16 +83,6 @@ export default {
   margin-bottom: 10px;
 }
 
-.dice-button {
-  background-color: #4caf50;
-  color: white;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  width: 4vw;
-  height: 2vw;
-}
-
 .dice-button:hover {
   background-color: #45a049;
 }
@@ -101,4 +91,39 @@ export default {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+@media (max-width: 768px) {
+  .dice-img {
+    width: 50px !important;
+    height: auto !important;
+  }
+
+  .dice-button {
+    background-color: #4caf50;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    width: 50px;
+    height: 30px;
+  }
+}
+
+@media (min-width: 768px) {
+  .dice-img {
+    width: 4vw !important;
+    height: 4vw !important;
+  }
+
+  .dice-button {
+    background-color: #4caf50;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    width: 4vw;
+    height: 2vw;
+  }
+}
+
 </style>

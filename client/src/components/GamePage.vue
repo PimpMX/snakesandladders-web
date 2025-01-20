@@ -1,11 +1,12 @@
 <template>
-  <GameControls :state="state" @rollDice="handleDiceRoll" @undoMove="undoMove" />
-  <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex" />
-  <GameField :state="state" />
-  <!-- Winner Banner -->
-  <div v-if="winner" class="winner-banner">
-    <h2>🎉 {{ winner }} has won the game! 🎉</h2>
-    <button class="btn btn-primary" @click="exitGame">Exit</button>
+  <div class=" h-100 d-flex flex-column align-items-center justify-content-center">
+    <GameControls :state="state" @rollDice="handleDiceRoll" @undoMove="undoMove" />
+    <PlayerList :players="state.players" :currentPlayerIndex="currentPlayerIndex" />
+    <GameField :state="state" />
+    <div v-if="winner" class="winner-banner">
+      <h2>🎉 {{ winner }} has won the game! 🎉</h2>
+      <button class="btn btn-primary" @click="exitGame">Exit</button>
+    </div>
   </div>
 </template>
 

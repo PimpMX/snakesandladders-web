@@ -22,6 +22,11 @@ export default {
   methods: {
     exitGame() {
       requests.restart();
+      this.$router.push({
+        path: this.$route.path,
+        query: {},
+      });
+      requests.create(8);
     },
     async undoMove() {
       try {
@@ -66,12 +71,23 @@ export default {
   object-fit: contain;
 }
 
-.dice-container {
-  position: absolute;
-  top: 57%;
-  right: 18%;
-  transform: translateY(-50%);
-  width: 10vw;
-  height: 10vw;
+@media (max-width: 768px) {
+  .dice-container {
+    position: absolute;
+    top: 70%;
+    right: 19%;
+    width: 30vw;
+    height: 30vw;
+  }
 }
+
+@media (min-width: 768px) {
+  .dice-container {
+    position: absolute;
+    top: 57%;
+    right: 25%;
+    transform: translateY(-50%);
+  }
+}
+
 </style>
