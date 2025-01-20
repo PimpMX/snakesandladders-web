@@ -1,108 +1,143 @@
 package controllers
 
-import javax.inject._
-import play.api._
-import play.api.mvc._
-import scala.math._
-import play.api.libs.json.Json
+import org.apache.pekko.actor.{Actor, ActorRef, ActorSystem, Props}
+import org.apache.pekko.stream.Materializer
 
+import javax.inject.*
+import play.api.*
+import play.api.mvc.*
+
+import scala.math.*
+import play.api.libs.json.{JsNull, JsObject, Json}
+import play.api.libs.streams.ActorFlow
 import snakes.SnakesAndLadders
+import snakes.controller.ControllerInterface
+import snakes.model.playerComponent.PlayerInterface
+import snakes.util.Event.*
+import snakes.util.{Event, Observer}
 
-/**
- * This controller creates an `Action` to handle HTTP requests to the
- * application's home page.
- */
+import scala.swing.Reactor
+
 @Singleton
-class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
+class SnakesAndLaddersController @Inject()(val controllerComponents: ControllerComponents)
+                                          (implicit system: ActorSystem, mat: Materializer) extends BaseController {
 
-  val controller = SnakesAndLadders.controller;
+  val controller: ControllerInterface = SnakesAndLadders.controller;
 
-  /**
-   * Create an Action to render an HTML page.
-   *
-   * The configuration in the `routes` file means that this method
-   * will be called when the application receives a `GET` request with
-   * a path of `/`.
-   */
-
-  def createGame(size: Int) = Action { implicit request: Request[AnyContent] =>
+  def createGame(size: Int): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.createGame(size)
-    Ok(play.api.libs.json.Json.obj(
-      "success" -> true,
-      "gameSize" -> size,
-      "message" -> s"Game of size $size created"
-    ))
+    NoContent
   }
 
-  def saveGame() = Action { implicit request: Request[AnyContent] =>
-    controller.saveGame()
-    Ok(controller.toString())
-  }
-
-  def loadGame() = Action { implicit request: Request[AnyContent] =>
-    controller.loadGame()
-    Ok(controller.toString())
-  }
-
-  def startGame() = Action { implicit request: Request[AnyContent] =>
+  def startGame: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.startGame()
-    Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.gameBoard())
+    NoContent
   }
 
-  def restartGame() = Action { implicit request: Request[AnyContent] =>
+  def checkWin: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    if (controller.checkWin()) {
+      val winner = controller.getCurrentGameState.getPlayers
+        .find(_.getPosition == controller.getBoardSize)
+        .map(_.getName)
+        .getOrElse("Unknown")
+      Ok(Json.obj("winner" -> winner))
+    } else {
+      Ok(Json.obj("winner" -> JsNull))
+    }
+  }
+
+
+
+
+  def restartGame: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.restartGame()
-    Ok(controller.toString())
-    Redirect(routes.SnakesAndLaddersController.index())
+    NoContent
   }
 
-  def addPlayer(playerName: String) = Action { implicit request: Request[AnyContent] =>
+  def addPlayer(playerName: String): Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.addPlayer(playerName)
-    val players = controller.getCurrentGameState.getPlayers.map(_.getName).toList
-    Ok(Json.obj("players" -> players))
+    NoContent
   }
 
-  def rollDice() = Action { implicit request: Request[AnyContent] =>
+  def rollDice: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.rollDice()
-
-    val players = controller.getCurrentGameState.getPlayers.toList
-    val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
-    val boardSize = sqrt(controller.getBoardSize).toInt
-    val rolledValue = currentPlayer.getLastRoll
-
-    // Render
-    val boardHtml = views.html.game(boardSize, players, currentPlayer.getName, rolledValue).toString
-
-    Ok(Json.obj(
-      "boardHtml" -> boardHtml
-    ))
+    NoContent
   }
 
-  def undoLastStep() = Action { implicit request: Request[AnyContent] =>
+  def undoLastStep: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
     controller.undoLastAction()
+    NoContent
+  }
 
-    val players = controller.getCurrentGameState.getPlayers.toList
-    val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
-    val boardSize = sqrt(controller.getBoardSize).toInt
-    val rolledValue = currentPlayer.getLastRoll
+  def gameState: Action[AnyContent] = Action { implicit request: Request[AnyContent] =>
+    Ok(getGameState)
+  }
 
-    // Render
-    val boardHtml = views.html.game(boardSize, players, currentPlayer.getName, rolledValue).toString
+  def socket: WebSocket = WebSocket.accept[String, String] { request =>
+    ActorFlow.actorRef { out =>
+      println("New connection was established")
+      SnakesAndLaddersSocketActorFactory.create(out)
+    }
+  }
 
-    Ok(Json.obj(
-      "boardHtml" -> boardHtml
+  private def playerToJson(player: PlayerInterface): JsObject = {
+    if(player != null) {
+      Json.obj(
+        "name" -> player.getName,
+        s"color" -> s"rgb(${player.getColor.getRed}, ${player.getColor.getGreen}, ${player.getColor.getBlue})",
+        "position" -> player.getPosition,
+        "lastRoll" -> player.getLastRoll
+      )
+    } else {
+      Json.obj()
+    }
+  }
+
+  def getGameState: JsObject = {
+
+    val gameState = controller.getCurrentGameState
+    val players = gameState.getPlayers.map(player => playerToJson(player))
+    val currentPlayer = if(!gameState.isGameStarted()) JsNull else playerToJson(gameState.getCurrentPlayer())
+    val snakes = gameState.getBoard.getSnakes.map(snake => Json.obj(
+      "s" -> snake._1,
+      "e" -> snake._2
     ))
+    val ladders = gameState.getBoard.getLadders.map(ladder => Json.obj(
+      "s" -> ladder._1,
+      "e" -> ladder._2
+    ))
+
+    Json.obj(
+      "gameIsRunning" -> gameState.isGameStarted(),
+      "players" -> players.toList,
+      "currentPlayer" -> currentPlayer,
+      "board" -> Json.obj(
+        "dimensions" -> gameState.getBoard.getSize,
+        "snakes" -> snakes,
+        "ladders" -> ladders
+      )
+    )
   }
 
-  def index() = Action { implicit request: Request[AnyContent] =>
-    Ok(views.html.index())
+  private object SnakesAndLaddersSocketActorFactory {
+    def create(out: ActorRef): Props = {
+      Props(new SnakesAndLaddersSocketActor(out))
+    }
   }
 
-  def gameBoard() = Action { implicit request: Request[AnyContent] =>
-    val players = controller.getCurrentGameState.getPlayers.toList // Convert Queue to List
-    val currentPlayer = controller.getCurrentGameState.getCurrentPlayer()
-    val boardSize = sqrt(controller.getBoardSize).toInt
-    val rolledValue = controller.getCurrentGameState.getCurrentPlayer().getLastRoll
-    Ok(views.html.game(boardSize, players, currentPlayer.getName, rolledValue))
+  private class SnakesAndLaddersSocketActor(out: ActorRef) extends Actor with Reactor {
+
+    listenTo(controller)
+
+    def receive: Receive = {
+      case msg: String => println(s"Received message: $msg")
+    }
+
+    reactions += {
+      case _ => out ! getGameState.toString
+    }
   }
 }
+
+
+

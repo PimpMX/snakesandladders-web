@@ -8,6 +8,8 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "3.3.1"
 libraryDependencies += guice
 libraryDependencies += "org.scalatestplus.play" %% "scalatestplus-play" % "7.0.1" % Test
+libraryDependencies += "com.typesafe.play" %% "play-filters-helpers" % play.core.PlayVersion.current
+
 
 // Adds additional packages into Twirl
 //TwirlKeys.templateImports += "de.htwg-konstanz.controllers._"
